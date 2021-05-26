@@ -4,6 +4,13 @@ import './index.css';
 import App from './views/App';
 import reportWebVitals from './reportWebVitals';
 import thunk from 'redux-thunk';
+import firebase from 'firebase/app';
+import 'firebase/analytics'
+import {applyMiddleware, createStore} from 'redux';
+import {Provider} from 'react-redux';
+import reducer from './reducers/index'
+
+const store = createStore(reducer, applyMiddleware(thunk))
 
   var firebaseConfig = {
     apiKey: "AIzaSyAq2zCA7CEytSSHitZHNXZVNE6YBTrN2pU",
@@ -14,14 +21,14 @@ import thunk from 'redux-thunk';
     appId: "1:583769992858:web:b3d184fcda55c6dd43b923",
     measurementId: "G-2P5BS2YLRP"
   };
-  // firebase.initializeApp(firebaseConfig);
-  // firebase.analytics();
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
   // firebase.firestore();
 
 ReactDOM.render(
-  <>
+  <Provider store={store}>
     <App />
-  </>,
+  </Provider>,
   document.getElementById('root')
 );
 
