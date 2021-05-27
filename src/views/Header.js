@@ -28,8 +28,6 @@ const Header = () => {
   const classes = useStyles();
   const items = useSelector(itemsSelector)
   const toppings = useSelector(toppingsSelector)
-  console.log(items)
-  console.log(toppings)
 
   const login = () => {
     const google_auth_provider = new firebase.auth.GoogleAuthProvider()

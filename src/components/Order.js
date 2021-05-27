@@ -92,7 +92,25 @@ const Order = () => {
   // }else if(orderDate === specifyDate){
   //   if()
   // }
-    
+  const [inputYear, setYear] = useState("")
+  const changeYear = (e) => {
+    setYear(e.target.value)
+  }
+  const [inputMonth, setMonth] = useState("")
+  const changeMonth = (e) => {
+    setMonth(e.target.value)
+  }
+  const [inputDate, setDate] = useState("")
+  const changeDate = (e) => {
+    setDate(e.target.value)
+  }
+  const [inputHour, setHour] = useState("")
+  const changeHour = (e) => {
+    setHour(e.target.value)
+  }
+  console.log(inputHour)
+  
+     
 
 
 
@@ -176,19 +194,23 @@ const Order = () => {
       <FormControl>
         <InputLabel>年</InputLabel>
         <Select
+          onChange={changeYear}
+          value={inputYear}
           style = {{width: 80}} 
         >
-          <MenuItem value={20}>{year}</MenuItem>
-          <MenuItem value={30}>{year + 1}</MenuItem>
-          <MenuItem value={30}>{year + 2}</MenuItem>
-          <MenuItem value={30}>{year + 3}</MenuItem>
-          <MenuItem value={30}>{year + 4}</MenuItem>
+          <MenuItem value={year}>{year}年</MenuItem>
+          <MenuItem value={year + 1}>{year + 1}年</MenuItem>
+          <MenuItem value={year + 2}>{year + 2}年</MenuItem>
+          <MenuItem value={year + 3}>{year + 3}年</MenuItem>
+          <MenuItem value={year +4}>{year + 4}年</MenuItem>
         </Select>
       </FormControl>
       <FormControl>
         <InputLabel id="demo-simple-select-label">月</InputLabel>
         <Select
           style = {{width: 80}} 
+          onChange={changeMonth}
+          value={inputMonth}
         >
           <MenuItem value={1}>1月</MenuItem>
           <MenuItem value={2}>2月</MenuItem>
@@ -208,6 +230,8 @@ const Order = () => {
         <InputLabel id="demo-simple-select-label">日</InputLabel>
         <Select
          style = {{width: 80}} 
+         value={inputDate}
+         onChange={changeDate}
         >
           <MenuItem value={1}>01日</MenuItem>
           <MenuItem value={2}>02日</MenuItem>
@@ -246,6 +270,8 @@ const Order = () => {
         <InputLabel>時間</InputLabel>
         <Select
           style = {{width: 100}} 
+          value={inputHour}
+          onChange={changeHour}
         >
           <MenuItem value={8}>08:00</MenuItem>
           <MenuItem value={9}>09:00</MenuItem>
