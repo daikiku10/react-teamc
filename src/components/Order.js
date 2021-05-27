@@ -7,9 +7,14 @@ import Box from '@material-ui/core/Box'
 import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import FormControl from '@material-ui/core/FormControl'
-
+import FormHelperText from '@material-ui/core/FormHelperText'
+import {useHistory} from "react-router-dom" 
 
 const Order = () => {
+  const history = useHistory()
+  const handleLink = path => history.push(path)
+  
+  // 名前入力、名前エラー
   const [name,setName] = useState("")
   const changeName = (e) => {
     setName(e.target.value)
@@ -20,6 +25,7 @@ const Order = () => {
   }else{
     nameError = ''
   }
+  // メール入力、メールエラー
   const [email,setEmail] = useState("")
   const changeEmail = (e) => {
     setEmail(e.target.value)
@@ -32,6 +38,7 @@ const Order = () => {
   }else{
     emailError = <p>メールアドレスの形式が不正です</p>
   }
+  // 郵便番号入力、郵便番号エラー
   const [zipcode, setZipcode] = useState("")
   const changeZipcode = e => {
     setZipcode(e.target.value)
@@ -44,6 +51,7 @@ const Order = () => {
   }else{
     zipcodeError = <p>郵便番号はXXX-XXXXの形式で入力してください</p>
   }
+  // 住所入力、住所エラー
   const [address,setAddress] = useState("")
   const changeAddress = e => {
     setAddress(e.target.value)
@@ -54,6 +62,7 @@ const Order = () => {
   }else{
     addressError = ''
   }
+  // 電話番号入力、電話番号エラー
   const [tel,setTel] = useState("")
   const changeTel = e => {
     setTel(e.target.value)
@@ -66,32 +75,7 @@ const Order = () => {
   }else{
     telError = <p>電話番号はXXXX-XXXX-XXXXの形式で入力してください</p>
   }
-  const [time,setTime] = useState("")
-  const changeTime = e => {
-    setTime(e.target.value)
-  } 
-  let timeError;
-  const today = new Date();
-  const year = today.getFullYear()
-  const month = "0" + (1 + today.getMonth())
-  const day = today.getDate()
-  const hour = today.getHours()
-  const second = today.getSeconds()
-  console.log(hour)
-  console.log(second)
-  console.log(typeof(year))
-  console.log(year + month + day)
-  const orderDate = year + month + day
-  const specifyDate = Number(time.slice(0,4) + time.slice(5,7)  + time.slice(8,10))
-  console.log(specifyDate)
-  console.log(typeof(specifyDate))
-  // if(time === ''){
-  //   timeError = <p>配達日時を入力して下さい</p>
-  // }else if(orderDate - specifyDate > 0){
-  //   timeError = "過去の日付は選べません"
-  // }else if(orderDate === specifyDate){
-  //   if()
-  // }
+  // 配達日時入力、配達日時エラー
   const [inputYear, setYear] = useState("")
   const changeYear = (e) => {
     setYear(e.target.value)
@@ -100,6 +84,7 @@ const Order = () => {
   const changeMonth = (e) => {
     setMonth(e.target.value)
   }
+  console.log(typeof(inputMonth))
   const [inputDate, setDate] = useState("")
   const changeDate = (e) => {
     setDate(e.target.value)
@@ -108,53 +93,97 @@ const Order = () => {
   const changeHour = (e) => {
     setHour(e.target.value)
   }
-  console.log(inputHour)
-  
-     
 
-
-
-
- const [pay,setPay] = useState("")
- const changePay = e => {
-   setPay(e.target.value)
- } 
- const [credit, SetCredit] = useState("")
- const changeCredit = e => {
-   SetCredit(e.target.value)
- }
- console.log(credit)
- let creditInput;
- let creditError;
- if(credit === ''){
-   creditError = "クレジット番号を入力してください"
- }else if(credit.match(/^[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}$/)){
-   creditError = ''
- }else{
-   creditError = "クレジット番号はXXXX-XXXX-XXXX-XXXXの形式で入力してください"
- }
- if(pay === "2"){
-  creditInput =
-  <div>
-    <Box mt={1}>
-      <TextField id="credit" label="クレジットカード番号" style = {{width: 400}} type="text" value={credit} onChange={changeCredit} helperText={creditError}/>
-    </Box>
-  </div>
- }
-
+  let timeError;
+  const today = new Date();
+  const year = today.getFullYear()
+  const month = "0" + (1 + today.getMonth())
+  const day = today.getDate()
+  const hour = today.getHours()
+  const second = today.getSeconds()
+  const orderDate = Number(year + month + day)
+  const orderTime = year + "-" + month + "-" + day + "-" + hour + ":" + second
+  console.log(orderTime)
+  console.log(orderDate)
+  const specifyDate =  Number(String(inputYear) + String(inputMonth) + String(inputDate))
+  const specifyTime = inputYear + "-" + inputMonth + "-" + inputDate + "-"  + inputHour + ":" + "00"
+  console.log(specifyTime)
+  console.log(specifyDate)
+  console.log(hour)
+  if(inputYear === "" || inputMonth === '' || inputDate === '' || inputHour === ''){
+    timeError = <p>配達希望日時を入力してください</p>
+  }else if(orderDate - specifyDate > 0){
+    timeError = "過去の日付は選択できません"
+  }else if(orderDate === specifyDate){
+    if(hour - inputHour < 3 || inputHour - hour < 0){
+      timeError = <p>今から3時間後の日時をご入力ください</p>
+    }
+  }else{
+    timeError = ''
+  }
+  // 支払い方法入力、支払い方法エラー
+  const [pay,setPay] = useState("")
+  const changePay = e => {
+    setPay(e.target.value)
+  } 
+  let payError
+  if(pay === ''){
+    payError = "支払い方法を選択してください"
+  }else{
+    payError = ''
+  }
+  // クレジット入力画面、入力値取得、クレジットエラー
+  const [credit, SetCredit] = useState("")
+  const changeCredit = e => {
+    SetCredit(e.target.value)
+  }
+  let creditError;
+  if(credit === ''){
+    creditError = "クレジット番号を入力してください"
+   }else if(credit.match(/^[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}$/)){
+     creditError = ''
+   }else{
+     creditError = "クレジット番号はXXXX-XXXX-XXXX-XXXXの形式で入力してください"
+   }
+   let creditInput;
+   if(pay === "2"){
+   creditInput =
+   <div>
+     <Box mt={1}>
+       <TextField id="credit" label="クレジットカード番号" style = {{width: 400}} type="text" value={credit} onChange={changeCredit} helperText={creditError}/>
+     </Box>
+   </div>
+  }
+  // 注文ボタン押下
   const orderBtn = () => {
     const orderInfo = {
+      items:[],
       name: name,
       email: email,
       zipcode: zipcode,
       tel: tel,
       address: address,
-      time: time,
-      pat: pay,
+      specifyTime: specifyTime,
+      orderTime:orderTime,
+      pay: pay,
       credit: credit
     }
-    console.log(orderInfo)
+    // 「代金引換」を選択して、バリデーションに引っかからなかった場合
+    if(pay === "1" && nameError === '' && emailError === "" && zipcodeError === '' && addressError === '' && telError === '' && timeError === '' && payError === ''){
+      console.log(orderInfo)
+      handleLink('/order-complete')
+      
+      // 「クレジット」を選択してバリデーションに引っかからなかった場合
+    }else if(pay === "2" && nameError === '' && emailError === "" && zipcodeError === '' && addressError === '' && telError === '' && timeError === '' && payError === '' && creditError === ''){
+      console.log(orderInfo)
+      handleLink('/order-complete')
+
+      // バリデーションに一つでも引っかかった場合
+    }else{
+      console.log("エラーが残っています")
+    }
   }
+
 
   return(
     <Box textAlign="center">
@@ -175,29 +204,17 @@ const Order = () => {
       <Box mt={1}>
         <TextField id="tel" label="電話番号" style = {{width: 400}} onChange={changeTel} value={tel} helperText={telError} color="secondary"/>
       </Box>
-      <Box mt={1}>
-        <TextField
-          id="time"
-          value={zipcode}
-          value={time}
-          onChange={changeTime}
-          label="お届け希望日時"
-          type="datetime-local"
-          style = {{width: 400}}
-          helperText={timeError}
-          color="secondary"
-          min="2021-05-29T09:00"
-          InputLabelProps={{
-            shrink: true,
-          }}/>
-      </Box>
+
+
+      <Box>
+      <FormHelperText>{timeError}</FormHelperText>
       <FormControl>
         <InputLabel>年</InputLabel>
         <Select
           onChange={changeYear}
           value={inputYear}
-          style = {{width: 80}} 
-        >
+          style = {{width: 100}} 
+          >
           <MenuItem value={year}>{year}年</MenuItem>
           <MenuItem value={year + 1}>{year + 1}年</MenuItem>
           <MenuItem value={year + 2}>{year + 2}年</MenuItem>
@@ -206,33 +223,33 @@ const Order = () => {
         </Select>
       </FormControl>
       <FormControl>
-        <InputLabel id="demo-simple-select-label">月</InputLabel>
+        <InputLabel>月</InputLabel>
         <Select
-          style = {{width: 80}} 
+          style = {{width: 100}} 
           onChange={changeMonth}
           value={inputMonth}
-        >
-          <MenuItem value={1}>1月</MenuItem>
-          <MenuItem value={2}>2月</MenuItem>
-          <MenuItem value={3}>3月</MenuItem>
-          <MenuItem value={4}>4月</MenuItem>
-          <MenuItem value={5}>5月</MenuItem>
-          <MenuItem value={6}>6月</MenuItem>
-          <MenuItem value={7}>7月</MenuItem>
-          <MenuItem value={8}>8月</MenuItem>
-          <MenuItem value={9}>9月</MenuItem>
-          <MenuItem value={10}>10月</MenuItem>
-          <MenuItem value={11}>11月</MenuItem>
-          <MenuItem value={12}>12月</MenuItem>
+          >
+          <MenuItem value="01">1月</MenuItem>
+          <MenuItem value="02">2月</MenuItem>
+          <MenuItem value="03">3月</MenuItem>
+          <MenuItem value="04">4月</MenuItem>
+          <MenuItem value="05">5月</MenuItem>
+          <MenuItem value="06">6月</MenuItem>
+          <MenuItem value="07">7月</MenuItem>
+          <MenuItem value="08">8月</MenuItem>
+          <MenuItem value="09">9月</MenuItem>
+          <MenuItem value="10">10月</MenuItem>
+          <MenuItem value="11">11月</MenuItem>
+          <MenuItem value="12">12月</MenuItem>
         </Select>
       </FormControl>
       <FormControl>
-        <InputLabel id="demo-simple-select-label">日</InputLabel>
+        <InputLabel>日</InputLabel>
         <Select
-         style = {{width: 80}} 
+         style = {{width: 100}} 
          value={inputDate}
          onChange={changeDate}
-        >
+         >
           <MenuItem value={1}>01日</MenuItem>
           <MenuItem value={2}>02日</MenuItem>
           <MenuItem value={3}>03日</MenuItem>
@@ -272,7 +289,7 @@ const Order = () => {
           style = {{width: 100}} 
           value={inputHour}
           onChange={changeHour}
-        >
+          >
           <MenuItem value={8}>08:00</MenuItem>
           <MenuItem value={9}>09:00</MenuItem>
           <MenuItem value={10}>10:00</MenuItem>
@@ -287,24 +304,24 @@ const Order = () => {
           <MenuItem value={19}>19:00</MenuItem>
           <MenuItem value={20}>20:00</MenuItem>
           <MenuItem value={21}>21:00</MenuItem>
- 
         </Select>
       </FormControl>
-
-      <Box mt={1}>
-        <InputLabel htmlFor="select">お支払い方法</InputLabel>
-          <NativeSelect id="pay" onChange={changePay} value={pay} style = {{width: 400}} color="secondary">
-            <option value='' hidden>支払い方法を選択</option>
-            <option value="1">代金引換</option>
-            <option value="2">クレジットカード決済</option>
-          </NativeSelect>
-      </Box>
-      {creditInput}
-      <Box mt={3}>
-        <Button variant="contained" style = {{width: 300}} onClick={() => {orderBtn()}} color="secondary">この内容で注文する</Button>
-      </Box>
-  </Box>
- )
+    </Box>
+    <Box mt={1}>
+      {/* <InputLabel htmlFor="select">お支払い方法</InputLabel> */}
+      <FormHelperText>{payError}</FormHelperText>
+        <NativeSelect id="pay" onChange={changePay} value={pay} style = {{width: 400}} color="secondary" helperText={payError}>
+          <option value='' hidden>支払い方法を選択</option>
+          <option value="1">代金引換</option>
+          <option value="2">クレジットカード決済</option>
+        </NativeSelect>
+    </Box>
+    {creditInput}
+    <Box mt={3}>
+      <Button variant="contained" style = {{width: 300}} onClick={() => {orderBtn()}} color="secondary">この内容で注文する</Button>
+    </Box>
+</Box>
+)
 
 }
 export default Order
