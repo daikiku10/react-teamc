@@ -80,6 +80,11 @@ const Order = () => {
  const changePay = e => {
    setPay(e.target.value)
  } 
+ const [credit, SetCredit] = useState("")
+ const changeCredit = e => {
+   SetCredit(e.target.value)
+ }
+ console.log(credit)
  let creditInput;
  if(pay === "2"){
   creditInput =
@@ -88,10 +93,6 @@ const Order = () => {
       <TextField id="credit" label="クレジットカード番号" style = {{width: 400}} type="text" value={credit} onChange={changeCredit}/>
     </Box>
   </div>
- }
- const [credit, SetCredit] = useState("")
- const changeCredit = e => {
-   SetCredit(e.target.value)
  }
 
   const orderBtn = () => {
