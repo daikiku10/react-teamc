@@ -6,6 +6,8 @@ import { AppBar, Typography, Toolbar, Button,} from '@material-ui/core';
 import { BrowserRouter as Router, Route, useHistory} from 'react-router-dom';
 
 const userSelector = state => state.user.user
+const itemsSelector = state => state.item.items
+const toppingsSelector = state => state.topping.toppings
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,6 +26,10 @@ const Header = () => {
   const history = useHistory();
   const handleLink = path => history.push(path)
   const classes = useStyles();
+  const items = useSelector(itemsSelector)
+  const toppings = useSelector(toppingsSelector)
+  console.log(items)
+  console.log(toppings)
 
   const login = () => {
     const google_auth_provider = new firebase.auth.GoogleAuthProvider()

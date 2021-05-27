@@ -23,7 +23,7 @@ const store = createStore(reducer, applyMiddleware(thunk))
   };
   firebase.initializeApp(firebaseConfig);
   firebase.analytics();
-  // firebase.firestore();
+  firebase.firestore();
 
 ReactDOM.render(
   <Provider store={store}>
