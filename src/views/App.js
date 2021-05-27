@@ -6,6 +6,8 @@ import Header from './Header';
 import Home from './Home';
 import CartItem from './CartItem';
 import OrderHistory from './OrderHistory';
+import OrderComplete from './OrderComplete';
+import ItemDetail from './ItemDetail';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 const App = () => {
@@ -39,6 +41,8 @@ const App = () => {
       <Switch>
         <Route path='/order-history' component={OrderHistory} />
         <Route path='/cart-item' component={CartItem} />
+        <Route path='/order-complete' component={OrderComplete} />
+        <Route path='/item-detail/:item_id' component={ItemDetail} />
         <Route path='/' component={Home} />
       </Switch>
     </Router>
