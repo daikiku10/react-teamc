@@ -1,5 +1,12 @@
+import Order from '../components/Order'
+
 const CartItem = () => {
-  return <div>CartItem</div>
+  return (
+    <div>
+      <h1>Cart Item</h1>
+      <Order/>
+    </div>
+  )
 }
 
 export default CartItem
