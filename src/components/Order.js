@@ -21,7 +21,7 @@ const Order = () => {
   }
   let nameError 
   if(name === ''){
-    nameError = <label>名前を入力してください</label>
+    nameError = "名前を入力してください"
   }else{
     nameError = ''
   }
@@ -32,11 +32,11 @@ const Order = () => {
   }
   let emailError;
   if(email === ""){
-    emailError = <p>メールアドレスを入力して下さい</p>
+    emailError = "メールアドレスを入力して下さい"
   }else if(email.match(/^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/)){
     emailError = ""
   }else{
-    emailError = <p>メールアドレスの形式が不正です</p>
+    emailError = "メールアドレスの形式が不正です"
   }
   // 郵便番号入力、郵便番号エラー
   const [zipcode, setZipcode] = useState("")
@@ -45,11 +45,11 @@ const Order = () => {
   }
   let zipcodeError;
   if(zipcode === ''){
-    zipcodeError = <p>郵便番号を入力して下さい</p>
+    zipcodeError ="郵便番号を入力して下さい"
   }else if(zipcode.match(/^[0-9]{3}-[0-9]{4}$/)){
     zipcodeError = ""
   }else{
-    zipcodeError = <p>郵便番号はXXX-XXXXの形式で入力してください</p>
+    zipcodeError = "郵便番号はXXX-XXXXの形式で入力してください"
   }
   // 住所入力、住所エラー
   const [address,setAddress] = useState("")
@@ -69,11 +69,11 @@ const Order = () => {
   } 
   let telError;
   if(tel === ''){
-    telError = <p>電話番号を入力して下さい</p>
+    telError = "電話番号を入力して下さい"
   }else if(tel.match(/^[0-9]{4}-[0-9]{4}-[0-9]{4}$/)){
     telError = ""
   }else{
-    telError = <p>電話番号はXXXX-XXXX-XXXXの形式で入力してください</p>
+    telError = "電話番号はXXXX-XXXX-XXXXの形式で入力してください"
   }
   // 配達日時入力、配達日時エラー
   const [inputYear, setYear] = useState("")
@@ -111,12 +111,12 @@ const Order = () => {
   console.log(specifyDate)
   console.log(hour)
   if(inputYear === "" || inputMonth === '' || inputDate === '' || inputHour === ''){
-    timeError = <p>配達希望日時を入力してください</p>
+    timeError = "配達希望日時を入力してください"
   }else if(orderDate - specifyDate > 0){
     timeError = "過去の日付は選択できません"
   }else if(orderDate === specifyDate){
     if(hour - inputHour < 3 || inputHour - hour < 0){
-      timeError = <p>今から3時間後の日時をご入力ください</p>
+      timeError = "今から3時間後の日時をご入力ください"
     }
   }else{
     timeError = ''
@@ -196,7 +196,7 @@ const Order = () => {
       </Box>
       
       <Box mt={1}>
-        <TextField id="zipcode" label="郵便番号" style = {{width: 400}} value={zipcode} onChange={changeZipcode} helperText= {zipcodeError} color="secondary"/>
+        <TextField id="zipcode" label="郵便番号" style = {{width: 400}} value={zipcode} onChange={changeZipcode} helperText= {zipcodeError} color="secondary" />
       </Box>
       <Box mt={1}>
         <TextField id="address" label="住所" style = {{width: 400}} onChange={changeAddress} value={address} helperText={addressError} color="secondary"/>
@@ -205,9 +205,7 @@ const Order = () => {
         <TextField id="tel" label="電話番号" style = {{width: 400}} onChange={changeTel} value={tel} helperText={telError} color="secondary"/>
       </Box>
 
-
       <Box>
-      <FormHelperText>{timeError}</FormHelperText>
       <FormControl>
         <InputLabel>年</InputLabel>
         <Select
@@ -221,6 +219,7 @@ const Order = () => {
           <MenuItem value={year + 3}>{year + 3}年</MenuItem>
           <MenuItem value={year +4}>{year + 4}年</MenuItem>
         </Select>
+        <FormHelperText>{timeError}</FormHelperText>
       </FormControl>
       <FormControl>
         <InputLabel>月</InputLabel>
@@ -308,13 +307,15 @@ const Order = () => {
       </FormControl>
     </Box>
     <Box mt={1}>
-      {/* <InputLabel htmlFor="select">お支払い方法</InputLabel> */}
-      <FormHelperText>{payError}</FormHelperText>
-        <NativeSelect id="pay" onChange={changePay} value={pay} style = {{width: 400}} color="secondary" helperText={payError}>
-          <option value='' hidden>支払い方法を選択</option>
-          <option value="1">代金引換</option>
-          <option value="2">クレジットカード決済</option>
-        </NativeSelect>
+      <FormControl>
+
+        <Select id="pay" onChange={changePay} value={pay} style = {{width: 400}} color="secondary" helperText={payError}>
+        <MenuItem value="" disabled>支払い方法を選択</MenuItem>
+          <MenuItem value="1">代金引換</MenuItem>
+          <MenuItem value="2">クレジットカード決済</MenuItem>
+        </Select>
+        <FormHelperText>{payError}</FormHelperText>
+      </FormControl>
     </Box>
     {creditInput}
     <Box mt={3}>
