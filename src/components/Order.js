@@ -21,7 +21,7 @@ const Order = () => {
   
   const user = useSelector(userSelector);
   // console.log(user)
-  // const userId = 1
+  const userId = user.uid
   
   // 名前入力、名前エラー
   const [name,setName] = useState("")

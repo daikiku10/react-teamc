@@ -6,6 +6,7 @@ import { withStyles, makeStyles } from '@material-ui/core/styles';
 import {Container, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,Box} from '@material-ui/core';
 import { CART_STATUS_IN } from '../actions/status'
 import Order from '../components/Order'
+import {useHistory} from "react-router-dom" 
 
 const userSelector = state => state.user.user
 const itemsSelector = state => state.item.items
@@ -77,9 +78,21 @@ const CartItem = () => {
     }
   },[])
   
+  const history = useHistory()
+  const handleLink = path => history.push(path)
+  const login = () => {
+    const google_auth_provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithRedirect(google_auth_provider);
+    handleLink("/cart-item");
+  };
+
   const [show, setShow] = useState(false)
   const showOrderComponent = () =>{
-    setShow(true)
+    if(user){
+      setShow(!show)
+    }else{
+      login()
+    }
   }
 
   const addCart = () => {
