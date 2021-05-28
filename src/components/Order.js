@@ -2,7 +2,6 @@ import React,{useState} from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField' 
 import InputLabel from '@material-ui/core/InputLabel'
-import NativeSelect from '@material-ui/core/NativeSelect'
 import Box from '@material-ui/core/Box'
 import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
@@ -115,8 +114,8 @@ const Order = () => {
   }else if(orderDate - specifyDate > 0){
     timeError = "過去の日付は選択できません"
   }else if(orderDate === specifyDate){
-    if(hour - inputHour < 3 || inputHour - hour < 0){
-      timeError = "今から3時間後の日時をご入力ください"
+    if(inputHour - hour < 3 || inputHour - hour < 0){
+      timeError = "今から3時間後以降の日時をご入力ください"
     }
   }else{
     timeError = ''
@@ -194,18 +193,21 @@ const Order = () => {
       <Box mt={1}>
         <TextField id="email" value={email} type="email" label="メールアドレス" style = {{width: 400}} onChange={changeEmail} helperText={emailError} color="secondary"/>
       </Box>
+      {/* <input type="text" name="zip11" size="10" maxlength="8" onKeyUp="AjaxZip3.zip2addr(this,'','addr11','addr11');">
+<input type="text" name="addr11" size="60"> */}
+
       
       <Box mt={1}>
-        <TextField id="zipcode" label="郵便番号" style = {{width: 400}} value={zipcode} onChange={changeZipcode} helperText= {zipcodeError} color="secondary" />
+        <TextField id="zipcode" label="郵便番号" style = {{width: 400}} value={zipcode} onChange={changeZipcode} helperText= {zipcodeError} color="secondary"/>
       </Box>
       <Box mt={1}>
-        <TextField id="address" label="住所" style = {{width: 400}} onChange={changeAddress} value={address} helperText={addressError} color="secondary"/>
+        <TextField id="address" label="住所" style = {{width: 400}} onChange={changeAddress} value={address} helperText={addressError} color="secondary" name="addr11" size="60"/>
       </Box>
       <Box mt={1}>
-        <TextField id="tel" label="電話番号" style = {{width: 400}} onChange={changeTel} value={tel} helperText={telError} color="secondary"/>
+        <TextField id="tel" label="電話番号" style = {{width: 400}} onChange={changeTel}/>
       </Box>
 
-      <Box>
+      <Box mt={2}>
       <FormControl>
         <InputLabel>年</InputLabel>
         <Select
@@ -306,9 +308,8 @@ const Order = () => {
         </Select>
       </FormControl>
     </Box>
-    <Box mt={1}>
+    <Box mt={2}>
       <FormControl>
-
         <Select id="pay" onChange={changePay} value={pay} style = {{width: 400}} color="secondary" helperText={payError}>
         <MenuItem value="" disabled>支払い方法を選択</MenuItem>
           <MenuItem value="1">代金引換</MenuItem>
@@ -323,6 +324,5 @@ const Order = () => {
     </Box>
 </Box>
 )
-
 }
 export default Order
