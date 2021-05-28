@@ -3,10 +3,10 @@ import {useSelector, useDispatch} from 'react-redux';
 import { cartSet, setTopping, setItem, deleteItem, deleteTopping } from '../actions/index';
 import firebase from 'firebase';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import {Container, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@material-ui/core';
+import {Container, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,Box} from '@material-ui/core';
 import { CART_STATUS_IN } from '../actions/status'
 import Order from '../components/Order'
-
+import {useHistory} from "react-router-dom" 
 
 const userSelector = state => state.user.user
 const itemsSelector = state => state.item.items
@@ -42,7 +42,6 @@ const CartItem = () => {
   const items = useSelector(itemsSelector)
   const toppings = useSelector(toppingsSelector)
   const cart = useSelector(cartSelector)
-  // console.log(cart.itemInfo)
   const classes = useStyles();
   const dispatch = useDispatch();
   const [carts, setCarts] = useState({
@@ -58,10 +57,7 @@ const CartItem = () => {
       }
     ]
   })
-
   useEffect(() => {
-    dispatch(setItem())
-    dispatch(setTopping())
     if(user){
       firebase.firestore().collection(`users/${user.uid}/orders`).get().then(snapshot => {
         snapshot.forEach(item => {
@@ -72,11 +68,30 @@ const CartItem = () => {
         })
       })
     }
+    dispatch(setItem())
+    dispatch(setTopping())
     return () => {
       dispatch(deleteItem())
       dispatch(deleteTopping())
     }
   },[])
+  
+  const history = useHistory()
+  const handleLink = path => history.push(path)
+  const login = () => {
+    const google_auth_provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithRedirect(google_auth_provider);
+    handleLink("/cart-item");
+  };
+
+  const [show, setShow] = useState(false)
+  const showOrderComponent = () =>{
+    if(user){
+      setShow(!show)
+    }else{
+      login()
+    }
+  }
 
   const addCart = () => {
     if(user){
@@ -99,8 +114,6 @@ const CartItem = () => {
       }
     }
   }
-    
-
   return (
     <>
       <Container maxWidth="md">
@@ -117,23 +130,45 @@ const CartItem = () => {
                 <StyledTableCell align="center">削除</StyledTableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
-              {items.map((item) => (
-                <StyledTableRow key={item.id}>
-                  <StyledTableCell component="th" scope="row">
-                    {item.name}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">{item.priceM}</StyledTableCell>
-                  <StyledTableCell align="center">{item.description}</StyledTableCell>
-                  <StyledTableCell align="center">{item.imagePath}</StyledTableCell>
-                  <StyledTableCell align="center">{item.priceL}</StyledTableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>
+            <>
+              {cart !== "" ? (
+                <TableBody>
+                    {cart.itemInfo.map((data, index) => (
+                      <StyledTableRow key={index}>
+                        {items.filter((item) => {
+                          return data.itemId === item.id
+                        })
+                        .map((item) => (
+                          <>
+                            <StyledTableCell component="th" scope="row">
+                              {item.name}
+                            </StyledTableCell> 
+                            <StyledTableCell align="center">{item.priceM}</StyledTableCell>
+                            <StyledTableCell align="center">トッピング価格</StyledTableCell>
+                            <StyledTableCell align="center">{item.priceM}+トッピング価格</StyledTableCell>
+                            <StyledTableCell align="center"><Button>削除</Button></StyledTableCell>
+                          </>
+                        ))
+                        }
+                      </StyledTableRow>
+                    ))} 
+                </TableBody>
+                ) : (
+                  <>
+                    <h2>カート商品がありません！</h2>
+                  </>
+                )
+              }  
+            </>
           </Table>
         </TableContainer>
       </Container>
-      <Order/>
+      <Box mt={3} textAlign="center">
+        <Button variant="contained" style = {{width: 300}} color="secondary" onClick={() => {showOrderComponent()}}>{show? "閉じる" : "注文に進む"}</Button>
+      </Box>
+      <>
+      {show? <Order/> : <></>}
+      </>
     </>
   )
 }
