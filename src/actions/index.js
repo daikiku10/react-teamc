@@ -47,5 +47,18 @@ export const cartSet = (cartData) => ({
   cartData:cartData
 })
 
-
+// export const CARTSET = 'cartSet'
+// export const cartSet = (user) => dispatch => {
+//   firebase.firestore().collection(`users/${user.uid}/orders`).get().then(snapshot => {
+//     snapshot.forEach(item => {
+//       const data = item.data()
+//       if(data.status === CART_STATUS_IN){
+//         return dispatch ({
+//           type:CARTSET,
+//           cartData:data
+//         })
+//       } 
+//     })
+//   })
+// }
 
