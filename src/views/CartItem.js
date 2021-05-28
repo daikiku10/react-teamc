@@ -41,7 +41,6 @@ const CartItem = () => {
   const items = useSelector(itemsSelector)
   const toppings = useSelector(toppingsSelector)
   const cart = useSelector(cartSelector)
-  // console.log(cart.itemInfo)
   const classes = useStyles();
   const dispatch = useDispatch();
   const [carts, setCarts] = useState({
@@ -57,10 +56,7 @@ const CartItem = () => {
       }
     ]
   })
-
   useEffect(() => {
-    dispatch(setItem())
-    dispatch(setTopping())
     if(user){
       firebase.firestore().collection(`users/${user.uid}/orders`).get().then(snapshot => {
         snapshot.forEach(item => {
@@ -71,6 +67,8 @@ const CartItem = () => {
         })
       })
     }
+    dispatch(setItem())
+    dispatch(setTopping())
     return () => {
       dispatch(deleteItem())
       dispatch(deleteTopping())
@@ -131,19 +129,36 @@ const CartItem = () => {
                 <StyledTableCell align="center">削除</StyledTableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
-              {items.map((item) => (
-                <StyledTableRow key={item.id}>
-                  <StyledTableCell component="th" scope="row">
-                    {item.name}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">{item.priceM}</StyledTableCell>
-                  <StyledTableCell align="center">{item.description}</StyledTableCell>
-                  <StyledTableCell align="center">{item.imagePath}</StyledTableCell>
-                  <StyledTableCell align="center">{item.priceL}</StyledTableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>
+            <>
+              {cart !== "" ? (
+                <TableBody>
+                    {cart.itemInfo.map((data, index) => (
+                      <StyledTableRow key={index}>
+                        {items.filter((item) => {
+                          return data.itemId === item.id
+                        })
+                        .map((item) => (
+                          <>
+                            <StyledTableCell component="th" scope="row">
+                              {item.name}
+                            </StyledTableCell> 
+                            <StyledTableCell align="center">{item.priceM}</StyledTableCell>
+                            <StyledTableCell align="center">トッピング価格</StyledTableCell>
+                            <StyledTableCell align="center">{item.priceM}+トッピング価格</StyledTableCell>
+                            <StyledTableCell align="center"><Button>削除</Button></StyledTableCell>
+                          </>
+                        ))
+                        }
+                      </StyledTableRow>
+                    ))} 
+                </TableBody>
+                ) : (
+                  <>
+                    <h2>カート商品がありません！</h2>
+                  </>
+                )
+              }  
+            </>
           </Table>
         </TableContainer>
       </Container>
@@ -153,7 +168,6 @@ const CartItem = () => {
       <>
       {show? <Order/> : <></>}
       </>
-
     </>
   )
 }
