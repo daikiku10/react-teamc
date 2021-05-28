@@ -120,6 +120,7 @@ const Home = () => {
 }
 .cd{
   text-align: center;
+  return <div>Home Hello</div>
 }
 </style> */
 
