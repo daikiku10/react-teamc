@@ -12,7 +12,6 @@ import IconButton from "@material-ui/core/IconButton";
 const Home = () => {
   const itemsSelector = (state) => state.item.items;
   const items = useSelector(itemsSelector);
-  // console.log(items.name);
 
   const dispatch = useDispatch();
   useEffect(() => {
