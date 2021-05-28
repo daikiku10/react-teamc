@@ -3,10 +3,9 @@ import {useSelector, useDispatch} from 'react-redux';
 import { cartSet, setTopping, setItem, deleteItem, deleteTopping } from '../actions/index';
 import firebase from 'firebase';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import {Container, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@material-ui/core';
+import {Container, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,Box} from '@material-ui/core';
 import { CART_STATUS_IN } from '../actions/status'
 import Order from '../components/Order'
-
 
 const userSelector = state => state.user.user
 const itemsSelector = state => state.item.items
@@ -77,6 +76,11 @@ const CartItem = () => {
       dispatch(deleteTopping())
     }
   },[])
+  
+  const [show, setShow] = useState(false)
+  const showOrderComponent = () =>{
+    setShow(true)
+  }
 
   const addCart = () => {
     if(user){
@@ -99,8 +103,6 @@ const CartItem = () => {
       }
     }
   }
-    
-
   return (
     <>
       <Container maxWidth="md">
@@ -133,7 +135,13 @@ const CartItem = () => {
           </Table>
         </TableContainer>
       </Container>
-      <Order/>
+      <Box mt={3} textAlign="center">
+        <Button variant="contained" style = {{width: 300}} color="secondary" onClick={() => {showOrderComponent()}}>{show? "閉じる" : "注文に進む"}</Button>
+      </Box>
+      <>
+      {show? <Order/> : <></>}
+      </>
+
     </>
   )
 }

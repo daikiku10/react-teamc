@@ -8,10 +8,20 @@ import Select from '@material-ui/core/Select'
 import FormControl from '@material-ui/core/FormControl'
 import FormHelperText from '@material-ui/core/FormHelperText'
 import {useHistory} from "react-router-dom" 
+import { CART_STATUS_UNPAID } from '../actions/status'
+import { CART_STATUS_PAID } from '../actions/status'
+import { CASH_ON_DELIVERY } from '../actions/status'
+import { CREDIT_CARD } from '../actions/status'
+import { useSelector } from "react-redux";
 
+const userSelector = (state) => state.user.user;
 const Order = () => {
   const history = useHistory()
   const handleLink = path => history.push(path)
+  
+  const user = useSelector(userSelector);
+  // console.log(user)
+  // const userId = 1
   
   // 名前入力、名前エラー
   const [name,setName] = useState("")
@@ -83,7 +93,6 @@ const Order = () => {
   const changeMonth = (e) => {
     setMonth(e.target.value)
   }
-  console.log(typeof(inputMonth))
   const [inputDate, setDate] = useState("")
   const changeDate = (e) => {
     setDate(e.target.value)
@@ -102,13 +111,8 @@ const Order = () => {
   const second = today.getSeconds()
   const orderDate = Number(year + month + day)
   const orderTime = year + "-" + month + "-" + day + "-" + hour + ":" + second
-  console.log(orderTime)
-  console.log(orderDate)
   const specifyDate =  Number(String(inputYear) + String(inputMonth) + String(inputDate))
   const specifyTime = inputYear + "-" + inputMonth + "-" + inputDate + "-"  + inputHour + ":" + "00"
-  console.log(specifyTime)
-  console.log(specifyDate)
-  console.log(hour)
   if(inputYear === "" || inputMonth === '' || inputDate === '' || inputHour === ''){
     timeError = "配達希望日時を入力してください"
   }else if(orderDate - specifyDate > 0){
@@ -145,7 +149,7 @@ const Order = () => {
      creditError = "クレジット番号はXXXX-XXXX-XXXX-XXXXの形式で入力してください"
    }
    let creditInput;
-   if(pay === "2"){
+   if(pay === CREDIT_CARD){
    creditInput =
    <div>
      <Box mt={1}>
@@ -155,26 +159,36 @@ const Order = () => {
   }
   // 注文ボタン押下
   const orderBtn = () => {
+    const userId = user.uid
     const orderInfo = {
-      items:[],
-      name: name,
-      email: email,
-      zipcode: zipcode,
+      userId:userId,
+      //ログイン中のユーザーID
+      orderId: 1, 
+      //カートが持っているorderId
+      itemInfo:[], 
+      //カートが持っているitemInfo
+      destinationName: name,
+      destinationEmail: email,
+      destinationZipcode: zipcode,
       tel: tel,
-      address: address,
-      specifyTime: specifyTime,
-      orderTime:orderTime,
-      pay: pay,
-      credit: credit
+      destinationAddress: address,
+      destinationTime: specifyTime,
+      orderDate:orderTime,
+      paymentMethod: pay,
+      creditcardNo: credit
     }
     // 「代金引換」を選択して、バリデーションに引っかからなかった場合
-    if(pay === "1" && nameError === '' && emailError === "" && zipcodeError === '' && addressError === '' && telError === '' && timeError === '' && payError === ''){
+    if(pay ===  CASH_ON_DELIVERY && nameError === '' && emailError === "" && zipcodeError === '' && addressError === '' && telError === '' && timeError === '' && payError === ''){
+      orderInfo.status = CART_STATUS_UNPAID
       console.log(orderInfo)
+      //action createrへの処理
       handleLink('/order-complete')
       
       // 「クレジット」を選択してバリデーションに引っかからなかった場合
-    }else if(pay === "2" && nameError === '' && emailError === "" && zipcodeError === '' && addressError === '' && telError === '' && timeError === '' && payError === '' && creditError === ''){
+    }else if(pay === CREDIT_CARD && nameError === '' && emailError === "" && zipcodeError === '' && addressError === '' && telError === '' && timeError === '' && payError === '' && creditError === ''){
+      orderInfo.status = CART_STATUS_PAID
       console.log(orderInfo)
+          //action createrへの処理
       handleLink('/order-complete')
 
       // バリデーションに一つでも引っかかった場合
@@ -182,7 +196,6 @@ const Order = () => {
       console.log("エラーが残っています")
     }
   }
-
 
   return(
     <Box textAlign="center">
@@ -193,10 +206,7 @@ const Order = () => {
       <Box mt={1}>
         <TextField id="email" value={email} type="email" label="メールアドレス" style = {{width: 400}} onChange={changeEmail} helperText={emailError} color="secondary"/>
       </Box>
-      {/* <input type="text" name="zip11" size="10" maxlength="8" onKeyUp="AjaxZip3.zip2addr(this,'','addr11','addr11');">
-<input type="text" name="addr11" size="60"> */}
 
-      
       <Box mt={1}>
         <TextField id="zipcode" label="郵便番号" style = {{width: 400}} value={zipcode} onChange={changeZipcode} helperText= {zipcodeError} color="secondary"/>
       </Box>
@@ -312,8 +322,8 @@ const Order = () => {
       <FormControl>
         <Select id="pay" onChange={changePay} value={pay} style = {{width: 400}} color="secondary" helperText={payError}>
         <MenuItem value="" disabled>支払い方法を選択</MenuItem>
-          <MenuItem value="1">代金引換</MenuItem>
-          <MenuItem value="2">クレジットカード決済</MenuItem>
+          <MenuItem value={CASH_ON_DELIVERY}>代金引換</MenuItem>
+          <MenuItem value={CREDIT_CARD}>クレジットカード決済</MenuItem>
         </Select>
         <FormHelperText>{payError}</FormHelperText>
       </FormControl>
