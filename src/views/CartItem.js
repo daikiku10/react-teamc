@@ -13,7 +13,6 @@ const itemsSelector = state => state.item.items
 const cartSelector = state => state.cart.cart
 const toppingsSelector = state => state.topping.toppings
 
-// ---------------------------------------------
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
