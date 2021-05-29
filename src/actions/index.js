@@ -46,7 +46,10 @@ export const cartSet = (cartData) => ({
   type:CARTSET,
   cartData:cartData
 })
-
+export  const UPDATE_ORDER = "updateOrder"
+export const UpdateOrder = () => ({
+  type: UpdateOrder
+})
 // export const CARTSET = 'cartSet'
 // export const cartSet = (user) => dispatch => {
 //   firebase.firestore().collection(`users/${user.uid}/orders`).get().then(snapshot => {

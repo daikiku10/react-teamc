@@ -39,7 +39,7 @@ const ItemDetail = () => {
 
   const handleChangeTopping = (e) => {
     if (e.target.checked) {
-      let selectTopping = [...toppings, e.target.value]
+      let selectTopping = [...toppings, {id:e.target.value}]
       setToppings(selectTopping)
 
     } else if (!e.target.checked) {
@@ -51,6 +51,7 @@ const ItemDetail = () => {
 
   //サイズ
   const [size,setSize] = useState('M')
+  let itemPrice;
   const addCartBtn = () => {
     const item = {
       id: new Date().getTime().toString(),
@@ -110,7 +111,7 @@ const ItemDetail = () => {
                 </li>
               ))}
             </ul>
-            <h2>ご注文金額合計：{item.price}*個数+トッピング価格　円(税抜)</h2>
+            <h2>ご注文金額合計：*個数+トッピング価格　円(税抜)</h2>
                 <Button onClick={() => {addCartBtn()}} variant='contained' color='primary' dark='true'>
               カートに入れる
             </Button>
