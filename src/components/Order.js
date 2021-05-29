@@ -12,13 +12,16 @@ import { CART_STATUS_UNPAID } from '../actions/status'
 import { CART_STATUS_PAID } from '../actions/status'
 import { CASH_ON_DELIVERY } from '../actions/status'
 import { CREDIT_CARD } from '../actions/status'
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { order } from '../actions/index'
 
 const userSelector = (state) => state.user.user;
+const cartSelector = state => state.cart.cart
 const Order = () => {
   const history = useHistory()
+  const dispatch = useDispatch()
   const handleLink = path => history.push(path)
-  
+  const cart = useSelector(cartSelector);
   const user = useSelector(userSelector);
   // console.log(user)
   const userId = user.uid
@@ -79,10 +82,10 @@ const Order = () => {
   let telError;
   if(tel === ''){
     telError = "電話番号を入力して下さい"
-  }else if(tel.match(/^[0-9]{4}-[0-9]{4}-[0-9]{4}$/)){
+  }else if(tel.match(/^[0-9]{3}-[0-9]{4}-[0-9]{4}$/)){
     telError = ""
   }else{
-    telError = "電話番号はXXXX-XXXX-XXXXの形式で入力してください"
+    telError = "電話番号はXXX-XXXX-XXXXの形式で入力してください"
   }
   // 配達日時入力、配達日時エラー
   const [inputYear, setYear] = useState("")
@@ -114,7 +117,7 @@ const Order = () => {
   const specifyDate =  Number(String(inputYear) + String(inputMonth) + String(inputDate))
   const specifyTime = inputYear + "-" + inputMonth + "-" + inputDate + "-"  + inputHour + ":" + "00"
   if(inputYear === "" || inputMonth === '' || inputDate === '' || inputHour === ''){
-    timeError = "配達希望日時を入力してください"
+    timeError = "配達希望日時を入力"
   }else if(orderDate - specifyDate > 0){
     timeError = "過去の日付は選択できません"
   }else if(orderDate === specifyDate){
@@ -161,11 +164,12 @@ const Order = () => {
   const orderBtn = () => {
     const userId = user.uid
     const orderInfo = {
-      userId:userId,
+      // userId:userId,
       //ログイン中のユーザーID
-      orderId: 1, 
+      orderId: cart.orderId,
+      id: cart.itemId, 
       //カートが持っているorderId
-      itemInfo:[], 
+      itemInfo:cart.itemInfo, 
       //カートが持っているitemInfo
       destinationName: name,
       destinationEmail: email,
@@ -182,15 +186,17 @@ const Order = () => {
       orderInfo.status = CART_STATUS_UNPAID
       console.log(orderInfo)
       //action createrへの処理
+      dispatch(order(user, orderInfo))
       handleLink('/order-complete')
+      
       
       // 「クレジット」を選択してバリデーションに引っかからなかった場合
     }else if(pay === CREDIT_CARD && nameError === '' && emailError === "" && zipcodeError === '' && addressError === '' && telError === '' && timeError === '' && payError === '' && creditError === ''){
       orderInfo.status = CART_STATUS_PAID
       console.log(orderInfo)
           //action createrへの処理
-      handleLink('/order-complete')
-
+          dispatch(order(user, orderInfo))
+          handleLink('/order-complete')
       // バリデーションに一つでも引っかかった場合
     }else{
       console.log("エラーが残っています")
@@ -214,7 +220,7 @@ const Order = () => {
         <TextField id="address" label="住所" style = {{width: 400}} onChange={changeAddress} value={address} helperText={addressError} color="secondary" name="addr11" size="60"/>
       </Box>
       <Box mt={1}>
-        <TextField id="tel" label="電話番号" style = {{width: 400}} onChange={changeTel}/>
+        <TextField id="tel" label="電話番号" style = {{width: 400}} helperText={telError} value={tel} onChange={changeTel}/>
       </Box>
 
       <Box mt={2}>

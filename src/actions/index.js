@@ -1,4 +1,5 @@
 import firebase from 'firebase'
+import {CART_STATUS_IN} from './status'
 
 export const LOGINUSER = 'loginUser'
 export const loginUser = (user) => ({
@@ -42,26 +43,61 @@ export const deleteTopping = () => ({
 })
 
 export const CARTSET = 'cartSet'
-export const cartSet = (cartData) => ({
-  type:CARTSET,
-  cartData:cartData
+export const ORDERSET = 'cartSet'
+export const cartSet = (user) => dispatch => {
+  firebase.firestore().collection(`users/${user.uid}/orders`).get().then(snapshot => {
+    snapshot.forEach(item => {
+      const data = item.data()
+      data.orderId = item.id
+      if(data.status === CART_STATUS_IN){
+        console.log('０のやつ')
+          dispatch ({
+            type:CARTSET,
+            cartData:data
+          })
+      } 
+      // else if (data.status !== CART_STATUS_IN){
+      //   console.log('０以外のやつ')
+      //     dispatch ({
+      //       type:ORDERSET,
+      //       orderData:data
+      //     })
+      // }
+    })
+  })
+}
+export const CARTRESET = 'cartReset'
+export const cartReset = () => ({
+  type:CARTRESET
 })
-export  const UPDATE_ORDER = "updateOrder"
-export const UpdateOrder = () => ({
-  type: UpdateOrder
-})
-// export const CARTSET = 'cartSet'
-// export const cartSet = (user) => dispatch => {
-//   firebase.firestore().collection(`users/${user.uid}/orders`).get().then(snapshot => {
-//     snapshot.forEach(item => {
-//       const data = item.data()
-//       if(data.status === CART_STATUS_IN){
-//         return dispatch ({
-//           type:CARTSET,
-//           cartData:data
-//         })
-//       } 
-//     })
-//   })
-// }
 
+export const NEWCART = 'newCart'
+export const newCart = (user, cart) => dispatch => {
+  firebase.firestore().collection(`users/${user.uid}/orders`).add(cart).then(doc => {
+    cart.orderId = doc.id
+    return dispatch ({
+      type:NEWCART,
+      cartData:cart
+    })
+  })
+}
+
+export const ADDCART = 'addCart'
+export const addCart = (user, cart) => dispatch => {
+  firebase.firestore().collection(`users/${user.uid}/orders`).doc(cart.orderId).update(cart).then(() => {
+    return dispatch ({
+      type:ADDCART,
+      cartData:cart
+    })
+  })
+}
+
+export const ORDER = 'order'
+export const order = (user, orderInfo) => dispatch => {
+  firebase.firestore().collection(`users/${user.uid}/orders`).doc(orderInfo.orderId).update(orderInfo).then(() => {
+    return dispatch ({
+      type:ORDER,
+      orderInfo:orderInfo
+    })
+  }) 
+}
