@@ -205,7 +205,7 @@ const Order = () => {
       // バリデーションに一つでも引っかかった場合
     }else{
       console.log("エラーが残っています")
-      // setFinalError(true)
+      setFinalError(true)
     }
   }
 
