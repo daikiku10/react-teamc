@@ -5,7 +5,11 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
-import { setItem, deleteItem, setTopping, deleteTopping } from '../actions/index';
+import { setItem, deleteItem, setTopping, deleteTopping, newCart, addCart, cartSet } from '../actions/index';
+import { CART_STATUS_IN } from '../actions/status';
+
+const userSelector = state => state.user.user
+const cartSelector = state => state.cart.cart
 
 const ItemDetail = () => {
   const dispatch = useDispatch();
@@ -20,6 +24,8 @@ const ItemDetail = () => {
 
   //個数
   const itemsSelector = (state) => state.item.items;
+  const user = useSelector(userSelector);
+  const cart = useSelector(cartSelector);
   const items = useSelector(itemsSelector);
   const { item_id } = useParams();
   const itemIdNum = Number(item_id);
@@ -30,7 +36,13 @@ const ItemDetail = () => {
     setNum(e.target.value)
   }
   const buyNum2 = Number(buyNum)
-
+  
+  // カートの中身を持ってくる
+  useEffect(() => {
+    if(user){
+      dispatch(cartSet(user))
+    }
+  },[user])
 
  //トッピング
   const toppingsSelector = (state) => state.topping.toppings;
@@ -63,6 +75,23 @@ const ItemDetail = () => {
       }]
     }
     console.log(item)
+    if(user){
+      if(cart === ""){
+        dispatch(newCart(user, item))
+        handleLink('/cart-item')
+      }else {
+        const copyCart = cart
+        let info = [...copyCart.itemInfo, item.itemInfo[0]]
+        let data = {
+          id:cart.id,
+          orderId:cart.orderId,
+          status:CART_STATUS_IN,
+          itemInfo:info
+        }
+        dispatch(addCart(user, data))
+        handleLink('/cart-item')
+      }
+    }
   }
   return (
     <React.Fragment>
@@ -111,7 +140,7 @@ const ItemDetail = () => {
               ))}
             </ul>
             <h2>ご注文金額合計：*個数+トッピング価格　円(税抜)</h2>
-                <Button onClick={() => {addCartBtn()}} variant='contained' color='primary' dark='true'>
+                <Button onClick={addCartBtn} variant='contained' color='primary' dark='true'>
               カートに入れる
             </Button>
           </form>

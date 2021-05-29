@@ -1,5 +1,5 @@
-import {CARTSET, NEWCART, ADDCART, CARTRESET, ORDER, ORDERSET,} from '../actions/index'
-import { CART_STATUS_IN } from '../actions/status'
+import { ContactSupportOutlined } from '@material-ui/icons'
+import {CARTSET, NEWCART, ADDCART, CARTRESET, ORDER, ORDERSET, ORDERRESET,} from '../actions/index'
 
 const initialState = {
   cart:"",
@@ -9,27 +9,34 @@ const initialState = {
 export default (state = initialState, action) => {
   switch(action.type){
     case CARTSET:
-      console.log(action.cartData)
-      return {
-        cart: action.cartData,
-        orders:state.orders
-      }
+      return {cart: action.cartData}
     case NEWCART:
       return {cart: action.cartData}
     case ADDCART:
       return {cart: action.cartData}
     case CARTRESET:
       return {cart: ""}
+    // 配列にできない
     case ORDERSET:
-      return {
-        cart:state.cart,
-        orders: action.orderData
-      }
-    case ORDER:
+      if(state.orders == null){
         return {
           cart:"",
-          orders:action.orderInfo
-        }
+          orders:[...action.orderData]}
+      }else {
+        return {
+          cart:"",
+          orders:[...state.orders, action.orderData]}
+      }
+    case ORDERRESET:
+      return {
+        cart:"",
+        orders:[]
+      }
+    case ORDER:
+      return {
+        cart:"",
+        orders:[...state.orders, action.orderInfo]
+      }
     default:
       return state
   }

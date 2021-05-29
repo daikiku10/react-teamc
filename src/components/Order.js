@@ -3,7 +3,7 @@ import {Button,TextField,InputLabel,Box,MenuItem,Select,FormControl,FormHelperTe
 import {useHistory} from "react-router-dom" 
 import { CART_STATUS_UNPAID, CART_STATUS_PAID,CASH_ON_DELIVERY,CREDIT_CARD} from '../actions/status'
 import { useSelector, useDispatch } from "react-redux";
-import { order } from '../actions/index'
+import { cartReset, order } from '../actions/index'
 
 const userSelector = (state) => state.user.user;
 const cartSelector = state => state.cart.cart
@@ -172,7 +172,7 @@ const Order = () => {
       // userId:userId,
       //ログイン中のユーザーID
       orderId: cart.orderId,
-      id: cart.itemId, 
+      id: cart.id, 
       //カートが持っているorderId
       itemInfo:cart.itemInfo, 
       //カートが持っているitemInfo

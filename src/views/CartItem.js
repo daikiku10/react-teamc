@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import { cartSet, setTopping, setItem, deleteItem, deleteTopping, newCart, addCart, order, orderSet } from '../actions/index';
+import { cartSet, setTopping, setItem, deleteItem, deleteTopping, newCart, addCart, order, orderSet, cartReset, orderReset } from '../actions/index';
 import firebase from 'firebase';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import {Container, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,Box, Typography, List, ListItemText} from '@material-ui/core';
@@ -42,26 +42,12 @@ const CartItem = () => {
   const items = useSelector(itemsSelector)
   const toppings = useSelector(toppingsSelector)
   const cart = useSelector(cartSelector)
+  // console.log(cart)
   const orders = useSelector(ordersSelector)
-  // console.log(orders)
   const classes = useStyles();
   const dispatch = useDispatch();
   const [price, setPrice] = useState(0)
   const [toppingPrice, setToppingPrice] = useState(0)
-  const [carts, setCarts] = useState({
-    itemId:new Date().getTime().toString(),
-    status:0,
-    itemInfo:[
-      { itemId:2,
-        buyNum:3,
-        size:"M",
-        toppings:[
-          {id:3},
-          {id:4}
-        ]
-      }
-    ]
-  })
 
   // アイテム・トッピングを持ってくる　
   useEffect(() => {
@@ -70,15 +56,17 @@ const CartItem = () => {
     return () => {
       dispatch(deleteItem())
       dispatch(deleteTopping())
+      dispatch(cartReset())
+      dispatch(orderReset())
     }
   },[])
-
+  
   // カートの中身を持ってくる
   useEffect(() => {
     if(user){
       dispatch(cartSet(user))
     }
-  },[user])
+  },[items])
 
   // 商品合計金額
   useEffect(() => {
@@ -126,31 +114,12 @@ const CartItem = () => {
     }
   }
 
-  // 「カートに入れる」ボタンを押したとき※商品詳細で使う
-  const cartInfo = () => {
-    if(user){
-      if(cart === ""){
-        dispatch(newCart(user, carts))
-      }else {
-        const copyCart = cart
-        let test = [...copyCart.itemInfo, carts.itemInfo[0]]
-        let a = {
-          itemId: cart.itemId,
-          orderId:cart.orderId,
-          status:CART_STATUS_IN,
-          itemInfo:test
-        }
-        dispatch(addCart(user, a))
-      }
-    }
-  }
   return (
     <>
       <Container maxWidth="md">
         <Typography variant="h6" color="inherit" noWrap>
           ショッピングカート
         </Typography>
-        <Button onClick={cartInfo}>カートへ入れる</Button>
         <TableContainer component={Paper}>
           <Table className={classes.table} aria-label="customized table">
             <TableHead>

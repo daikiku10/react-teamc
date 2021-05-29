@@ -43,26 +43,17 @@ export const deleteTopping = () => ({
 })
 
 export const CARTSET = 'cartSet'
-export const ORDERSET = 'cartSet'
 export const cartSet = (user) => dispatch => {
   firebase.firestore().collection(`users/${user.uid}/orders`).get().then(snapshot => {
     snapshot.forEach(item => {
       const data = item.data()
       data.orderId = item.id
       if(data.status === CART_STATUS_IN){
-        console.log('０のやつ')
           dispatch ({
             type:CARTSET,
             cartData:data
           })
       } 
-      // else if (data.status !== CART_STATUS_IN){
-      //   console.log('０以外のやつ')
-      //     dispatch ({
-      //       type:ORDERSET,
-      //       orderData:data
-      //     })
-      // }
     })
   })
 }
@@ -91,6 +82,26 @@ export const addCart = (user, cart) => dispatch => {
     })
   })
 }
+
+export const ORDERSET = 'orderSet'
+export const orderSet = user => dispatch => {
+  firebase.firestore().collection(`users/${user.uid}/orders`).get().then(snapshot => {
+    snapshot.forEach(item => {
+      const data = item.data()
+      if(data.status !== CART_STATUS_IN){
+        dispatch({
+          type:ORDERSET,
+          orderData:data
+        })
+      }
+    })
+  })
+}
+export const ORDERRESET = 'orderReset'
+export const orderReset = () => ({
+  type:ORDERRESET
+})
+
 
 export const ORDER = 'order'
 export const order = (user, orderInfo) => dispatch => {
