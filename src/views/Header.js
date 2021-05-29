@@ -1,9 +1,10 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import firebase from "firebase";
 import { makeStyles } from "@material-ui/core/styles";
 import { AppBar, Typography, Toolbar, Button } from "@material-ui/core";
 import { BrowserRouter as Router, Route, useHistory } from "react-router-dom";
+import { cartReset } from "../actions";
 
 const userSelector = (state) => state.user.user;
 
@@ -24,6 +25,7 @@ const Header = () => {
   const history = useHistory();
   const handleLink = (path) => history.push(path);
   const classes = useStyles();
+  const dispatch = useDispatch();
 
   const login = () => {
     const google_auth_provider = new firebase.auth.GoogleAuthProvider();
@@ -32,6 +34,7 @@ const Header = () => {
   };
   const logout = () => {
     firebase.auth().signOut();
+    dispatch(cartReset());
     handleLink("/");
   };
 
