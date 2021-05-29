@@ -24,7 +24,7 @@ const Order = () => {
   if(name === ''){
     nameError = <>名前を入力してください</>
   }else{
-    nameError = <></>
+    nameError = ''
   }
   // メール入力、メールエラー
   const [email,setEmail] = useState("")
@@ -35,7 +35,7 @@ const Order = () => {
   if(email === ""){
     emailError = <>メールアドレスを入力して下さい</>
   }else if(email.match(/^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/)){
-    emailError = <></>
+    emailError = ''
   }else{
     emailError = <p>メールアドレスの形式が不正です</p>
   }
@@ -60,7 +60,7 @@ const Order = () => {
   if(zipcode === ''){
     zipcodeError = <>郵便番号を入力して下さい</>
   }else if(zipcode.match(/^[0-9]{3}-[0-9]{4}$/)){
-    zipcodeError = <></>
+    zipcodeError = ''
   }else{
     zipcodeError = <>郵便番号はXXX-XXXXの形式で入力してください</>
   }
@@ -69,7 +69,7 @@ const Order = () => {
   if(address === ''){
     addressError = <>住所を入力して下さい</>
   }else{
-    addressError = <></>
+    addressError = ''
   }
   // 電話番号入力、電話番号エラー
   const [tel,setTel] = useState("")
@@ -80,7 +80,7 @@ const Order = () => {
   if(tel === ''){
     telError = <>電話番号を入力して下さい</>
   }else if(tel.match(/^[0-9]{3}-[0-9]{4}-[0-9]{4}$/)){
-    telError = <></>
+    telError = ''
   }else{
     telError = <>電話番号はXXX-XXXX-XXXXの形式で入力してください</>
   }
@@ -124,7 +124,7 @@ const Order = () => {
       timeError = <>3時間後以降の日時をご入力</>
     }
   }else{
-    timeError = <></>
+    timeError = ''
   }
 
   // 支払い方法入力、支払い方法エラー
@@ -136,7 +136,7 @@ const Order = () => {
   if(pay === ''){
     payError = <>支払い方法を選択してください</>
   }else{
-    payError = <></>
+    payError = ''
   }
   // クレジット入力画面、入力値取得、クレジットエラー
   const [credit, SetCredit] = useState("")
@@ -147,7 +147,7 @@ const Order = () => {
   if(credit === ''){
     creditError = <>クレジット番号を入力してください</>
    }else if(credit.match(/^[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}$/)){
-     creditError = <></>
+     creditError = ''
    }else{
      creditError = <>クレジット番号はXXXX-XXXX-XXXX-XXXXの形式で入力してください</>
    }
@@ -205,7 +205,7 @@ const Order = () => {
       // バリデーションに一つでも引っかかった場合
     }else{
       console.log("エラーが残っています")
-      setFinalError(true)
+      // setFinalError(true)
     }
   }
 
@@ -343,10 +343,10 @@ const Order = () => {
     </Box>
     {creditInput}
     <Box mt={3}>
-      <Button variant="contained" style = {{width: 300}} onClick={() => {orderBtn()}} color="secondary">この内容で注文する</Button>
       <div>
         {finalErrorMsg}
       </div>
+      <Button variant="contained" style = {{width: 300}} onClick={() => {orderBtn()}} color="secondary">この内容で注文する</Button>
     </Box>
 </Box>
 )
