@@ -102,7 +102,7 @@ const Order = () => {
   }
   const [inputHour, setHour] = useState("")
   const changeHour = (e) => {
-    setHour(e.target.value)
+    setHour(Number(e.target.value))
   }
 
   let timeError;
@@ -113,20 +113,23 @@ const Order = () => {
   const hour = today.getHours()
   const second = today.getSeconds()
   const orderDate = Number(year + month + day)
+  console.log(orderDate)
   const orderTime = year + "-" + month + "-" + day + "-" + hour + ":" + second
-  const specifyDate =  Number(String(inputYear) + String(inputMonth) + String(inputDate))
+  const specifyDate =  Number(String(inputYear) + String(inputMonth)  + String(inputDate))
+  console.log(specifyDate)
   const specifyTime = inputYear + "-" + inputMonth + "-" + inputDate + "-"  + inputHour + ":" + "00"
   if(inputYear === "" || inputMonth === '' || inputDate === '' || inputHour === ''){
     timeError = "配達希望日時を入力"
   }else if(orderDate - specifyDate > 0){
     timeError = "過去の日付は選択できません"
   }else if(orderDate === specifyDate){
-    if(inputHour - hour < 3 || inputHour - hour < 0){
+    if(inputHour - hour < 4 || inputHour - hour < 0){
       timeError = "今から3時間後以降の日時をご入力ください"
     }
   }else{
     timeError = ''
   }
+
   // 支払い方法入力、支払い方法エラー
   const [pay,setPay] = useState("")
   const changePay = e => {
@@ -267,37 +270,37 @@ const Order = () => {
          value={inputDate}
          onChange={changeDate}
          >
-          <MenuItem value={1}>01日</MenuItem>
-          <MenuItem value={2}>02日</MenuItem>
-          <MenuItem value={3}>03日</MenuItem>
-          <MenuItem value={4}>04日</MenuItem>
-          <MenuItem value={5}>05日</MenuItem>
-          <MenuItem value={6}>06日</MenuItem>
-          <MenuItem value={7}>07日</MenuItem>
-          <MenuItem value={8}>08日</MenuItem>
-          <MenuItem value={9}>09日</MenuItem>
-          <MenuItem value={10}>10日</MenuItem>
-          <MenuItem value={11}>11日</MenuItem>
-          <MenuItem value={12}>12日</MenuItem>
-          <MenuItem value={13}>13日</MenuItem>
-          <MenuItem value={14}>14日</MenuItem>
-          <MenuItem value={15}>15日</MenuItem>
-          <MenuItem value={16}>16日</MenuItem>
-          <MenuItem value={17}>17日</MenuItem>
-          <MenuItem value={18}>18日</MenuItem>
-          <MenuItem value={19}>19日</MenuItem>
-          <MenuItem value={20}>20日</MenuItem>
-          <MenuItem value={21}>21日</MenuItem>
-          <MenuItem value={22}>22日</MenuItem>
-          <MenuItem value={23}>23日</MenuItem>
-          <MenuItem value={24}>24日</MenuItem>
-          <MenuItem value={25}>25日</MenuItem>
-          <MenuItem value={26}>26日</MenuItem>
-          <MenuItem value={27}>27日</MenuItem>
-          <MenuItem value={28}>28日</MenuItem>
-          <MenuItem value={29}>29日</MenuItem>
-          <MenuItem value={30}>30日</MenuItem>
-          <MenuItem value={31}>31日</MenuItem>
+          <MenuItem value="01">01日</MenuItem>
+          <MenuItem value="02">02日</MenuItem>
+          <MenuItem value="03">03日</MenuItem>
+          <MenuItem value="04">04日</MenuItem>
+          <MenuItem value="05">05日</MenuItem>
+          <MenuItem value="06">06日</MenuItem>
+          <MenuItem value="07">07日</MenuItem>
+          <MenuItem value="08">08日</MenuItem>
+          <MenuItem value="09">09日</MenuItem>
+          <MenuItem value="10">10日</MenuItem>
+          <MenuItem value="11">11日</MenuItem>
+          <MenuItem value="12">12日</MenuItem>
+          <MenuItem value="13">13日</MenuItem>
+          <MenuItem value="14">14日</MenuItem>
+          <MenuItem value="15">15日</MenuItem>
+          <MenuItem value="16">16日</MenuItem>
+          <MenuItem value="17">17日</MenuItem>
+          <MenuItem value="18">18日</MenuItem>
+          <MenuItem value="19">19日</MenuItem>
+          <MenuItem value="20">20日</MenuItem>
+          <MenuItem value="21">21日</MenuItem>
+          <MenuItem value="22">22日</MenuItem>
+          <MenuItem value="23">23日</MenuItem>
+          <MenuItem value="24">24日</MenuItem>
+          <MenuItem value="25">25日</MenuItem>
+          <MenuItem value="26">26日</MenuItem>
+          <MenuItem value="27">27日</MenuItem>
+          <MenuItem value="28">28日</MenuItem>
+          <MenuItem value="29">29日</MenuItem>
+          <MenuItem value="30">30日</MenuItem>
+          <MenuItem value="31">31日</MenuItem>
         </Select>
       </FormControl>
       <FormControl>

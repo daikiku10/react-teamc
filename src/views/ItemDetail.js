@@ -39,7 +39,7 @@ const ItemDetail = () => {
 
   const handleChangeTopping = (e) => {
     if (e.target.checked) {
-      let selectTopping = [...toppings, {id:e.target.value}]
+      let selectTopping = [...toppings, {id: Number(e.target.value)}]
       setToppings(selectTopping)
 
     } else if (!e.target.checked) {
@@ -51,7 +51,6 @@ const ItemDetail = () => {
 
   //サイズ
   const [size,setSize] = useState('M')
-  let itemPrice;
   const addCartBtn = () => {
     const item = {
       id: new Date().getTime().toString(),
