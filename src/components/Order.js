@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField' 
 import InputLabel from '@material-ui/core/InputLabel'
@@ -88,23 +88,7 @@ const Order = () => {
     telError = "電話番号はXXX-XXXX-XXXXの形式で入力してください"
   }
   // 配達日時入力、配達日時エラー
-  const [inputYear, setYear] = useState("")
-  const changeYear = (e) => {
-    setYear(e.target.value)
-  }
-  const [inputMonth, setMonth] = useState("")
-  const changeMonth = (e) => {
-    setMonth(e.target.value)
-  }
-  const [inputDate, setDate] = useState("")
-  const changeDate = (e) => {
-    setDate(e.target.value)
-  }
-  const [inputHour, setHour] = useState("")
-  const changeHour = (e) => {
-    setHour(Number(e.target.value))
-  }
-
+  
   let timeError;
   const today = new Date();
   const year = today.getFullYear()
@@ -115,6 +99,22 @@ const Order = () => {
   const orderDate = Number(year + month + day)
   console.log(orderDate)
   const orderTime = year + "-" + month + "-" + day + "-" + hour + ":" + second
+  const [inputYear, setYear] = useState(year)
+  const changeYear = (e) => {
+    setYear(e.target.value)
+  }
+  const [inputMonth, setMonth] = useState(month)
+  const changeMonth = (e) => {
+    setMonth(e.target.value)
+  }
+  const [inputDate, setDate] = useState(day)
+  const changeDate = (e) => {
+    setDate(e.target.value)
+  }
+  const [inputHour, setHour] = useState("")
+  const changeHour = (e) => {
+    setHour(Number(e.target.value))
+  }
   const specifyDate =  Number(String(inputYear) + String(inputMonth)  + String(inputDate))
   console.log(specifyDate)
   const specifyTime = inputYear + "-" + inputMonth + "-" + inputDate + "-"  + inputHour + ":" + "00"
@@ -124,7 +124,7 @@ const Order = () => {
     timeError = "過去の日付は選択できません"
   }else if(orderDate === specifyDate){
     if(inputHour - hour < 4 || inputHour - hour < 0){
-      timeError = "今から3時間後以降の日時をご入力ください"
+      timeError = "3時間後以降の日時をご入力"
     }
   }else{
     timeError = ''
@@ -164,6 +164,11 @@ const Order = () => {
    </div>
   }
   // 注文ボタン押下
+  let finalErrorMsg
+  const [finalError, setFinalError] = useState(false)
+  if(finalError){
+    finalErrorMsg = <p>※入力に誤りのある箇所を修正してください</p>
+  }
   const orderBtn = () => {
     const userId = user.uid
     const orderInfo = {
@@ -203,6 +208,7 @@ const Order = () => {
       // バリデーションに一つでも引っかかった場合
     }else{
       console.log("エラーが残っています")
+      setFinalError(true)
     }
   }
 
@@ -236,9 +242,6 @@ const Order = () => {
           >
           <MenuItem value={year}>{year}年</MenuItem>
           <MenuItem value={year + 1}>{year + 1}年</MenuItem>
-          <MenuItem value={year + 2}>{year + 2}年</MenuItem>
-          <MenuItem value={year + 3}>{year + 3}年</MenuItem>
-          <MenuItem value={year +4}>{year + 4}年</MenuItem>
         </Select>
         <FormHelperText>{timeError}</FormHelperText>
       </FormControl>
@@ -340,6 +343,7 @@ const Order = () => {
     {creditInput}
     <Box mt={3}>
       <Button variant="contained" style = {{width: 300}} onClick={() => {orderBtn()}} color="secondary">この内容で注文する</Button>
+      {finalErrorMsg}
     </Box>
 </Box>
 )
