@@ -213,6 +213,7 @@ const Order = () => {
   return(
     <Box align="center">
       <h2>お届先情報</h2>
+      <button>fetch</button>
       <Box>
         <TextField label="お名前"  type="text" value={name}  style = {{width: 400}} onChange={changeName} helperText={nameError} color="secondary"/>
       </Box>
