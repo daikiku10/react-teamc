@@ -117,7 +117,6 @@ const ItemDetail = () => {
   return (
     <React.Fragment>
       <h2 justify='center'>商品詳細</h2>
-      <div>
         <Grid container justify='center'>
               <Grid item xs={4} sm={5} >
                 <div text-align='center'><img src={`/${item.imagePath}`} style={{ width: 400, height: 300 }}></img></div>
@@ -128,7 +127,7 @@ const ItemDetail = () => {
                 <p>{item.description}</p>
               </Grid>
         </Grid>
-        <Grid container justify='center' >
+        <Grid container justify='center'>
           <form>
           <p style={{ fontWeight:'bold' }}>サイズ </p>
               <label className='radio-inline'>
@@ -138,7 +137,7 @@ const ItemDetail = () => {
               <label className='radio-inline'>
                 <input type='radio' name='responsibleCompany' checked={size === 'L'} onChange={() =>  {setSize('L')}}/>
                 <span className='price'>&nbsp;Ｌ</span>&nbsp;&nbsp;{item.priceL}円(税抜)
-              </label><br />
+              </label><p />
             <span style={{ fontWeight: 'bold' }}>数量：</span>
             <span style={{ color: 'red', fontWeight: 'bold' }}>数量を選択してください</span><br/>
               <TextField
@@ -148,24 +147,24 @@ const ItemDetail = () => {
                 value={buyNum}
                 InputProps={{ inputProps: { min: 1, max: 10 } }}
                 onChange={handleChangebuyNum}
-                />
+            /><p/>
+          </form>
+        </Grid>
+        <Grid container justify='center' margin='spacing' xs={4} sm={5} >
+          <form>
             <label htmlFor='topping'>
-                <p style={{ fontWeight: 'bold' }}>トッピング ※1ヶにつき　少なめ200円、普通量300円（税抜）</p>
+              <p><span style={{ fontWeight: 'bold' }}>トッピング：</span>
+              <span style={{ color: 'red', fontWeight: 'bold' }}> ※1ヶにつき　200円、多めは300円（税抜）</span></p>
             </label>
-            <ul>
               {allToppings.map((topping, index) => (
-                <li key={index}>
-                  <label>{topping.name}:　<input type='checkbox' name='topping' value={topping.id} onChange={handleChangeTopping}/></label>
-                </li>
+                  <label><input type='checkbox' name='topping' value={topping.id} onChange={handleChangeTopping}/>{topping.name}</label>
               ))}
-            </ul>
             <h2>ご注文金額合計：{addPrice}　円(税抜)</h2>
             <Button onClick={addCartBtn} variant='contained' color='primary' dark='true'>
-              カートに入れる
+            カートに入れる
             </Button>
           </form>
         </Grid>
-      </div>
     </React.Fragment>
   )
 }
