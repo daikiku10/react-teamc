@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import { cartSet, setTopping, setItem, deleteItem, deleteTopping, newCart, addCart, order, orderSet, cartReset, orderReset } from '../actions/index';
+import { cartSet, setTopping, setItem, deleteItem, deleteTopping, cartReset, orderReset, deleteCart } from '../actions/index';
 import firebase from 'firebase';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import {Container, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,Box, Typography, List, ListItemText} from '@material-ui/core';
-import { CART_STATUS_IN } from '../actions/status'
 import Order from '../components/Order'
 import {useHistory} from "react-router-dom" 
 
@@ -42,7 +41,6 @@ const CartItem = () => {
   const items = useSelector(itemsSelector)
   const toppings = useSelector(toppingsSelector)
   const cart = useSelector(cartSelector)
-  // console.log(cart)
   const orders = useSelector(ordersSelector)
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -56,8 +54,10 @@ const CartItem = () => {
     return () => {
       dispatch(deleteItem())
       dispatch(deleteTopping())
-      dispatch(cartReset())
-      dispatch(orderReset())
+      if(user){
+        dispatch(cartReset())
+        dispatch(orderReset())
+      }
     }
   },[])
   
@@ -114,6 +114,12 @@ const CartItem = () => {
     }
   }
 
+  const deleteCartBtn = (index) => {
+    let copyCart = cart
+    copyCart.itemInfo.splice(index,1)
+    dispatch(deleteCart(user,copyCart))
+  }
+
   return (
     <>
       <Container maxWidth="md">
@@ -131,37 +137,37 @@ const CartItem = () => {
                 <StyledTableCell align="center">削除</StyledTableCell>
               </TableRow>
             </TableHead>
-            <>
+            
               {cart !== "" ? (
                 <TableBody>
                 {cart.itemInfo.map((data, index) => (
-                      <StyledTableRow key={index}>
+                      <StyledTableRow>
                         {items.filter((item) => {
                           return data.itemId === item.id
                         }).map((item) => (
                           <>
                             <StyledTableCell component="th" scope="row">
-                              <div><img src={item.imagePath} width="200" height="200"></img></div>
-                              <Typography align="center"><p>{item.name}</p></Typography>
+                              <Typography><img src={item.imagePath} width="200" height="200"></img></Typography>
+                              <Typography align="center">{item.name}</Typography>
                             </StyledTableCell> 
                             <StyledTableCell align="center">
-                              { data.size === "M" ? <Typography>{item.priceM}円、{data.buyNum}杯</Typography> : <>{item.priceL}円、{data.buyNum}杯</> }
+                              { data.size === "M" ? <Typography>{item.priceM}円、{data.buyNum}杯</Typography> : <Typography>{item.priceL}円、{data.buyNum}杯</Typography> }
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              {data.toppings.map((topping, ind) => (
-                                <List key={ind}>
+                              {data.toppings.map((topping) => (
+                                <List key={data.id}>
                                   {toppings.filter((top) => {
                                     return topping.id === top.id
-                                  }).map((to, i) => (
-                                    <>
-                                      <ListItemText key={i}>{to.name} : {to.price}円</ListItemText>
-                                    </>
+                                  }).map((to) => (
+                                      <ListItemText>{to.name} : {to.price}円</ListItemText>
                                   ))}
                                 </List>
                               ))}
                             </StyledTableCell>
-                            <StyledTableCell align="center">{data.size==="M"? item.priceM: item.priceL}+{}</StyledTableCell>
-                            <StyledTableCell align="center"><Button>削除</Button></StyledTableCell>
+                            <StyledTableCell align="center">
+                              {data.size==="M"? (item.priceM * data.buyNum) : item.priceL * data.buyNum}
+                            </StyledTableCell>
+                            <StyledTableCell align="center"><Button onClick={() => deleteCartBtn(index)}>削除</Button></StyledTableCell>
                           </>
                         ))
                       }
@@ -170,15 +176,13 @@ const CartItem = () => {
                       ))} 
                 </TableBody>
                 ) : (
-                  <>
-                    <h2>カート商品がありません！</h2>
-                  </>
+                    <Typography>カート商品がありません！</Typography>
                 )
               }  
-            </>
+            
           </Table>
-          <h2>消費税：{Math.floor((price + toppingPrice) * 0.1 / 1.1)}円</h2>
-          <h2>合計金額：{price + toppingPrice}円</h2>
+          <Typography>消費税：{Math.floor((price + toppingPrice) * 0.1 / 1.1)}円</Typography>
+          <Typography>合計金額：{price + toppingPrice}円</Typography>
         </TableContainer>
       </Container>
       <Box mt={3} textAlign="center">
@@ -186,9 +190,7 @@ const CartItem = () => {
         <Button variant="contained" style = {{width: 300}} color="secondary" onClick={() => {showOrderComponent()}}>{show? "閉じる" : "注文に進む"}</Button>
         : <Button variant="contained" style = {{width: 300}} color="secondary" onClick={() => {handleLink("/")}}>商品一覧に戻る</Button>}
         </Box>
-        <>
         {show? <Order/> : <></>}
-        </>
   </>
 )
 }
