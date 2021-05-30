@@ -79,7 +79,7 @@ const ItemDetail = () => {
       if(cart === ""){
         dispatch(newCart(user, item))
         handleLink('/cart-item')
-      }else {
+      }else{
         const copyCart = cart
         let info = [...copyCart.itemInfo, item.itemInfo[0]]
         let data = {
