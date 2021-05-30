@@ -113,6 +113,22 @@ const CartItem = () => {
       login()
     }
   }
+  // {data.toppings.map((topping, ind) => (
+  //   <List key={ind}>
+  //     {toppings.filter((top) => {
+  //       return topping.id === top.id
+  //     }).map((to, i) => (
+  //       <>
+  //         <ListItemText key={i}>{to.name} : {to.price}円</ListItemText>
+  //       </>
+  //     ))}
+  //   </List>
+  // ))}
+  const toppingPrice2 = toppings.map(topping => {
+    {toppings.filter(top => {return topping.id === top.id}).map((to2,i) => {
+    })}
+  })
+
 
   return (
     <>
@@ -160,7 +176,7 @@ const CartItem = () => {
                                 </List>
                               ))}
                             </StyledTableCell>
-                            <StyledTableCell align="center">{data.size==="M"? item.priceM: item.priceL}+トッピング価格</StyledTableCell>
+                            <StyledTableCell align="center">{data.size==="M"? item.priceM: item.priceL}+{}</StyledTableCell>
                             <StyledTableCell align="center"><Button>削除</Button></StyledTableCell>
                           </>
                         ))
