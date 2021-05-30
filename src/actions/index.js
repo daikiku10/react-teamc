@@ -106,9 +106,21 @@ export const orderReset = () => ({
 export const ORDER = 'order'
 export const order = (user, orderInfo) => dispatch => {
   firebase.firestore().collection(`users/${user.uid}/orders`).doc(orderInfo.orderId).update(orderInfo).then(() => {
-    return dispatch ({
-      type:ORDER,
-      orderInfo:orderInfo
+    let userInfo = {
+      userName: orderInfo.destinationName,
+      email: orderInfo.destinationEmail,
+      zipcode: orderInfo.destinationZipcode,
+      address: orderInfo.destinationAddress,
+      tel: orderInfo.tel,
+      creditcardNo: orderInfo.creditcardNo
+    }
+    firebase.firestore().collection(`users/${user.uid}/userInfo`).add(userInfo).then(() => {
+
+      return dispatch ({
+        type:ORDER,
+        orderInfo:orderInfo,
+        userInfo: userInfo
+      })
     })
   }) 
 }

@@ -35,7 +35,7 @@ export default (state = initialState, action) => {
     case ORDER:
       return {
         cart:"",
-        orders:[...state.orders, action.orderInfo]
+        orders:[...state.orders, action.orderInfo,action.userInfo]
       }
     default:
       return state
