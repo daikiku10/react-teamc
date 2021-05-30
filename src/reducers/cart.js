@@ -1,5 +1,4 @@
-import { ContactSupportOutlined } from '@material-ui/icons'
-import {CARTSET, NEWCART, ADDCART, CARTRESET, ORDER, ORDERSET, ORDERRESET,} from '../actions/index'
+import {CARTSET, NEWCART, ADDCART, CARTRESET, ORDER, ORDERSET, ORDERRESET, DELETECART,} from '../actions/index'
 
 const initialState = {
   cart:"",
@@ -10,28 +9,54 @@ const initialState = {
 export default (state = initialState, action) => {
   switch(action.type){
     case CARTSET:
-      return {cart: action.cartData}
+      return {
+        cart: action.cartData,
+        orders:[],
+        userInfo:state.userInfo
+      }
     case NEWCART:
-      return {cart: action.cartData}
+      return {
+        cart: action.cartData,
+        orders:[],
+        userInfo:state.userInfo
+      }
     case ADDCART:
-      return {cart: action.cartData}
+      return {
+        cart: action.cartData,
+        orders:[],
+        userInfo:state.userInfo
+      }
     case CARTRESET:
-      return {cart: ""}
-    // 配列にできない
+      return {
+        cart: "",
+        orders:[],
+        userInfo:state.userInfo
+      }
+    case DELETECART:
+      return {
+        cart: action.cartData,
+        orders:[],
+        userInfo:state.userInfo
+      }
     case ORDERSET:
       if(state.orders == null){
         return {
-          cart:"",
-          orders:[...action.orderData]}
+          cart:state.cart,
+          orders:[...action.orderData],
+          userInfo:state.userInfo
+        }
       }else {
         return {
-          cart:"",
-          orders:[...state.orders, action.orderData]}
+          cart:state.cart,
+          orders:[...state.orders, action.orderData],
+          userInfo:state.userInfo
+        }
       }
     case ORDERRESET:
       return {
-        cart:"",
-        orders:[]
+        cart:state.cart,
+        orders:[],
+        userInfo: state.userInfo
       }
     case ORDER:
       return {

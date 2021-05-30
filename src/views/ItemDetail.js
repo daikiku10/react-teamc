@@ -80,22 +80,20 @@ const ItemDetail = () => {
         toppings:toppings
       }]
     }
-    if(user){
-      if(cart === ""){
-        dispatch(newCart(user, item))
-        handleLink('/cart-item')
-      }else {
-        const copyCart = cart
-        let info = [...copyCart.itemInfo, item.itemInfo[0]]
-        let data = {
-          id:cart.id,
-          orderId:cart.orderId,
-          status:CART_STATUS_IN,
-          itemInfo:info
-        }
-        dispatch(addCart(user, data))
-        handleLink('/cart-item')
+    if(cart === ""){
+      dispatch(newCart(user, item))
+      handleLink('/cart-item')
+    }else {
+      const copyCart = cart
+      let info = [...copyCart.itemInfo, item.itemInfo[0]]
+      let data = {
+        id:cart.id,
+        orderId:cart.orderId,
+        status:CART_STATUS_IN,
+        itemInfo:info
       }
+      dispatch(addCart(user, data))
+      handleLink('/cart-item')
     }
   }
     //トッピング少なめの数
