@@ -11,8 +11,6 @@ import { CART_STATUS_IN } from '../actions/status';
 const userSelector = state => state.user.user
 const cartSelector = state => state.cart.cart
 
-
-
 const ItemDetail = () => {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -68,7 +66,6 @@ const ItemDetail = () => {
       setToppings(selectTopping)
     }
   }
-  console.log(toppings)
 
   //サイズ
   const [size,setSize] = useState('M')
@@ -83,7 +80,6 @@ const ItemDetail = () => {
         toppings:toppings
       }]
     }
-    console.log(item)
     if(user){
       if(cart === ""){
         dispatch(newCart(user, item))
@@ -102,31 +98,25 @@ const ItemDetail = () => {
       }
     }
   }
-
-  //合計金額
     //トッピング少なめの数
   let TopNum1 = 0
   let oddTop = toppings.filter(top =>  top.id % 2 !== 0 )
   TopNum1 = oddTop.length;
-
     //トッピング多めの数
   let TopNum2 = 0
   let evenTop = toppings.filter(top => top.id % 2 === 0 )
-  console.log(evenTop.length)
   TopNum2 = evenTop.length;
-  
+  //合計金額  
   let addPrice = item.priceM
   if (size === 'M') {
       addPrice = item.priceM * buyNum2 + ((200 * TopNum1) + (300 * TopNum2))
     } else if (size === 'L') {
       addPrice = item.priceL * buyNum2 + ((200 * TopNum1) + (300 * TopNum2))
     }
-  console.log(toppings.length)
 
   return (
     <React.Fragment>
       <h2 justify='center'>商品詳細</h2>
-       {/* //{items.filter((item) => {return item.id === itemIdNum;}).map((item) => ( */}
       <div>
         <Grid container justify='center'>
               <Grid item xs={4} sm={5} >
@@ -170,13 +160,12 @@ const ItemDetail = () => {
               ))}
             </ul>
             <h2>ご注文金額合計：{addPrice}　円(税抜)</h2>
-                <Button onClick={addCartBtn} variant='contained' color='primary' dark='true'>
+            <Button onClick={addCartBtn} variant='contained' color='primary' dark='true'>
               カートに入れる
             </Button>
           </form>
         </Grid>
       </div>
-        {/* //))} */}
     </React.Fragment>
   )
 }
