@@ -1,104 +1,223 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {CART_STATUS_UNPAID, CART_STATUS_PAID, CART_STATUS_UNDELIVERIED, CART_STATUS_DELIVERIDE, CART_STATUS_CANCEL} from '../actions/status';
 import firebase from 'firebase';
 import {useSelector, useDispatch} from 'react-redux'
+import {orderSet, setItem, setTopping, deleteItem, deleteTopping, cartReset, orderReset} from "../actions"
+import {List, Divider, ListItem, ListItemAvatar, ListItemText, Button, Grid} from '@material-ui/core';
+import {makeStyles} from "@material-ui/core/styles";
 
 const userSelector = state => state.user.user
-const cartSelector = state => state.cart.cart
+const ordersSelector = state => state.cart.orders
+const itemsSelector = state => state.item.items
+const toppingsSelector = state => state.topping.toppings
+
+const useStyles = makeStyles((theme) => ({
+  orderList: {
+    background: theme.palette.grey["100"],
+    margin: '0 auto',
+    padding: 32,
+    [theme.breakpoints.down('sm')]: {
+      width: '100%'
+    },
+    [theme.breakpoints.up('md')]: {
+      width: 768
+    }
+  },
+  list: {
+    background: '#fff',
+    height: 'auto'
+  },
+  image: {
+    objectFit: 'cover',
+    margin: '8px 16px 8px 0',
+    height: 96,
+    width: 96
+  },
+  text: {
+    width: '100%'
+  },
+  title: {
+    flexGrow: 1,
+  }
+}))
 
 const OrderHistory = () => {
+  const classes = useStyles()
   const user = useSelector(userSelector)
-  const cart = useSelector(cartSelector)
-  const orders = [
-    {status:1,orderdate:'2021-5-28',totalprice:1000,items:[{id:1,buynum:3,size:'M',topping:[{id:1,buynum:3},{id:3,buynum:2}]},
-                                                {id:3,buynum:2,size:'L',topping:[{id:5,buynum:1}]}]},
-    {status:9,orderdate:'2021-5-27',totalprice:2500,items:[{id:7,buynum:3,size:'M',topping:[{id:1,buynum:3},{id:3,buynum:2}]},
-                                                {id:9,buynum:2,size:'L',topping:[{id:5,buynum:1}]}]}]
-     
-    function Orderhistory(){
-      if(orders.length === 0){
-        return <p>注文履歴がありません</p>
-      }else if(orders.length > 0 ){
-          return (
-          // <React.Fragment>
-          //   {orders.filter((order) => {
-          //     return order.status === 1;
-          //   }).map((order,index) => {
-          //     <div key={index}>
-          // <p>注文日時：{order.orderdate}</p>
-          // <p>お支払い金額：{order.totalprice}</p>
-          // {order.items.map((item,index) => (
-          //     <div key={index}>
-          //     <p>商品ID：{item.id}</p>
-          //     <p>数量：{item.buynum}</p>
-          //     {item.topping.map((topping,index) => (
-          //       <div key={index}>
-          //         <p>トッピングID：{topping.id}</p>
-          //       </div>
-          //     ))}
-          //     </div>
-          // ))}
-          // <button>キャンセル</button>
-          // </div>
-          //   })}
-          // </React.Fragment>
-          // )}
-          <React.Fragment>
-          {orders.map((order,index) => (
-          <div key={index}>
-          <p>注文日時：{order.orderdate}</p>
-          <p>お支払い金額：{order.totalprice}</p>
-          <p>商品画像</p>
-          
-          {order.items.map((item,index) => (
-              <div key={index}>
-              <p>商品ID：{item.id}</p>
-              <p>数量：{item.buynum}</p>
-              {item.topping.map((topping,index) => (
-                <div key={index}>
-                  <p>トッピングID：{topping.id}</p>
+  const items = useSelector(itemsSelector)
+  const orders = useSelector(ordersSelector)
+  const toppings = useSelector(toppingsSelector)
+  const dispatch = useDispatch()
 
-                </div>
-              ))}
-              </div>
-          ))}
-          
-          <button>キャンセル</button>
-          </div>
-      ))}
-        </React.Fragment>
-      )
-      // else if(orders.length > 0 ){
-        // console.log(orders[count])
-    //     return <React.Fragment>
-    //       {orders.map((order,index) => (
-    //       <div key={index}>
-    //       <p>注文日時：{order.orderdate}</p>
-    //       <p>お支払い金額：{order.totalprice}</p>
-    //       <p>商品画像</p>
-          
-    //       {order.items.map((item,index) => (
-    //           <div key={index}>
-    //           <p>商品ID：{item.id}</p>
-    //           <p>数量：{item.buynum}</p>
-    //           {item.topping.map((topping,index) => (
-    //             <div key={index}>
-    //               <p>トッピングID：{topping.id}</p>
-
-    //             </div>
-    //           ))}
-    //           </div>
-    //       ))}
-    //       </div>
-    //   ))}
-    //     </React.Fragment>
-      }
+  // アイテム・トッピングを持ってくる　
+  useEffect(() => {
+    dispatch(setItem())
+    dispatch(setTopping())
+    return () => {
+      dispatch(deleteItem())
+      dispatch(deleteTopping())
+      dispatch(cartReset())
+      dispatch(orderReset())
     }
-    
+  },[])
+
+  useEffect(() => {
+    if(user){
+      dispatch(orderSet(user))
+    }
+  },[user])
+  const orders1 = orders.length
   return (
     <React.Fragment>
       <h1>注文履歴</h1>
-      <Orderhistory />
+      {/* <Orderhistory /> */}
+      { orders1 > 0 ? (
+        <section className="c-section-wrapin">
+          {orders.filter((order) => {
+            return order.status === CART_STATUS_UNPAID
+          }).map((order,index) => (
+            <List className={classes.orderList} key={index}>
+              <div className="module-spacer--small" />
+            <p>注文日時：{order.orderDate}</p>
+            {order.itemInfo.map((data,index) => (
+              <List key={index}>
+                {items.filter((item) => {
+                  return data.itemId === item.id
+                }).map((item, index) => (
+                  <>
+                  <ListItem className={classes.list} key={index}>
+                  <ListItemAvatar>
+                  <img src={`/${item.imagePath}`} width="200" height="200"></img>
+                  </ListItemAvatar>
+                  <div className={classes.text} />
+                  <div className={classes.text}>
+                    <ListItemText primary={item.name}
+                    secondary={ data.size === "M" ? <ListItemText secondary={"サイズ：M　単価：" + item.priceM + "円"}/> : <ListItemText secondary={"サイズ：L　単価：" + item.priceL + "円"}/>}></ListItemText>
+                    <ListItemText secondary={"数量：" + data.buyNum + "杯"}/>
+                    {data.toppings.map((topping, index) => (
+                      <div key={index}>
+                        {toppings.filter((top) => {
+                          return topping.id === top.id
+                        }).map((to,index) => (
+                          <div key={index}>
+                            <ListItemText 
+                            secondary={to.name + "：" + to.price + "円"}></ListItemText>
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                    </div>
+                  </ListItem>
+                  </>
+                ))}
+              </List>
+            ))}
+            <div className="module-spacer--extra-extra-small" />
+            <Grid container justify="flex-end">
+            <Button variant="outlined">キャンセル</Button>
+            </Grid>
+            <p></p>
+            <Divider />
+            </List>
+          ))}
+          {orders.filter((order) => {
+            return order.status === CART_STATUS_PAID
+          }).map((order,index) => (
+            <List className={classes.orderList} key={index}>
+              <div className="module-spacer--small" />
+            <p>注文日時：{order.orderDate}</p>
+            {order.itemInfo.map((data,index) => (
+              <List key={index}>
+                {items.filter((item) => {
+                  return data.itemId === item.id
+                }).map((item, index) => (
+                  <>
+                  <ListItem className={classes.list} key={index}>
+                  <ListItemAvatar>
+                  <img src={`/${item.imagePath}`} width="200" height="200"></img>
+                  </ListItemAvatar>
+                  <div className={classes.text} />
+                  <div className={classes.text}>
+                  <ListItemText primary={item.name}
+                    secondary={ data.size === "M" ? <ListItemText secondary={"サイズ：M　単価：" + item.priceM + "円"}/> : <ListItemText secondary={"サイズ：L　単価：" + item.priceL + "円"}/>}></ListItemText>
+                    <ListItemText secondary={"数量：" + data.buyNum + "杯"}/>
+                    {data.toppings.map((topping, index) => (
+                      <div key={index}>
+                        {toppings.filter((top) => {
+                          return topping.id === top.id
+                        }).map((to,index) => (
+                          <div key={index}>
+                            <ListItemText 
+                            secondary={to.name + "：" + to.price + "円"}></ListItemText>
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                    </div>
+                  </ListItem>
+                  </>
+                ))}
+              </List>
+            ))}
+            <div className="module-spacer--extra-extra-small" />
+            <Grid container justify="flex-end">
+            <Button variant="outlined">キャンセル</Button>
+            </Grid>
+            <p></p>
+            <Divider />
+            </List>
+          ))}
+          {orders.filter((order) => {
+            return order.status === CART_STATUS_CANCEL
+          }).map((order,index) => (
+            <List className={classes.orderList} key={index}>
+              <div className="module-spacer--small" />
+            <p>注文日時：{order.orderDate}</p>
+            {order.itemInfo.map((data,index) => (
+              <List key={index}>
+                {items.filter((item) => {
+                  return data.itemId === item.id
+                }).map((item, index) => (
+                  <>
+                  <ListItem className={classes.list} key={index}>
+                  <ListItemAvatar>
+                  <img src={`/${item.imagePath}`} width="200" height="200"></img>
+                  </ListItemAvatar>
+                  <div className={classes.text} />
+                  <div className={classes.text}>
+                  <ListItemText primary={item.name}
+                    secondary={ data.size === "M" ? <ListItemText secondary={"サイズ：M　単価：" + item.priceM + "円"}/> : <ListItemText secondary={"サイズ：L　単価：" + item.priceL + "円"}/>}></ListItemText>
+                    <ListItemText secondary={"数量：" + data.buyNum + "杯"}/>
+                    {data.toppings.map((topping, index) => (
+                      <div key={index}>
+                        {toppings.filter((top) => {
+                          return topping.id === top.id
+                        }).map((to,index) => (
+                          <div key={index}>
+                            <ListItemText 
+                            secondary={to.name + "：" + to.price + "円"}></ListItemText>
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                    </div>
+                  </ListItem>
+                  </>
+                ))}
+              </List>
+            ))}
+            <div className="module-spacer--extra-extra-small" />
+            <Grid container justify="flex-end">
+            <span>キャンセル済み</span>
+            </Grid>
+            <p></p>
+            <Divider />
+            </List>
+          ))}
+        </section>
+  ):(
+    <p>注文履歴がありません</p>
+  )}
     </React.Fragment>
   )
 }
