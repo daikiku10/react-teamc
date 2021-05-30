@@ -141,8 +141,8 @@ const CartItem = () => {
                         }).map((item) => (
                           <>
                             <StyledTableCell component="th" scope="row">
-                              <Typography>{item.name}</Typography>
                               <div><img src={item.imagePath} width="200" height="200"></img></div>
+                              <Typography align="center"><p>{item.name}</p></Typography>
                             </StyledTableCell> 
                             <StyledTableCell align="center">
                               { data.size === "M" ? <Typography>{item.priceM}円、{data.buyNum}杯</Typography> : <>{item.priceL}円、{data.buyNum}杯</> }
@@ -154,13 +154,13 @@ const CartItem = () => {
                                     return topping.id === top.id
                                   }).map((to, i) => (
                                     <>
-                                      <ListItemText key={i}>{to.name},{to.price}円</ListItemText>
+                                      <ListItemText key={i}>{to.name} : {to.price}円</ListItemText>
                                     </>
                                   ))}
                                 </List>
                               ))}
                             </StyledTableCell>
-                            <StyledTableCell align="center">{item.priceM}+トッピング価格</StyledTableCell>
+                            <StyledTableCell align="center">{data.size==="M"? item.priceM: item.priceL}+トッピング価格</StyledTableCell>
                             <StyledTableCell align="center"><Button>削除</Button></StyledTableCell>
                           </>
                         ))
@@ -182,13 +182,27 @@ const CartItem = () => {
         </TableContainer>
       </Container>
       <Box mt={3} textAlign="center">
+        {cart? 
         <Button variant="contained" style = {{width: 300}} color="secondary" onClick={() => {showOrderComponent()}}>{show? "閉じる" : "注文に進む"}</Button>
-      </Box>
-      <>
-      {show? <Order/> : <></>}
-      </>
-    </>
-  )
+        : <Button variant="contained" style = {{width: 300}} color="secondary" onClick={() => {handleLink("/")}}>商品一覧に戻る</Button>}
+        </Box>
+        <>
+        {show? <Order/> : <></>}
+        </>
+  </>
+)
 }
 
 export default CartItem
+
+// <Box mt={3} textAlign="center">
+// {cart? 
+// <Button variant="contained" style = {{width: 300}} color="secondary" onClick={() => {showOrderComponent()}}>{show? "閉じる" : "注文に進む"}</Button>
+// : <Button variant="contained" style = {{width: 300}} color="secondary" onClick={() => {handleLink("/")}}>商品一覧に戻る</Button>}
+// </Box>
+// <>
+// {show? <Order/> : <></>}
+// </>
+// </>
+// )
+// }

@@ -32,7 +32,7 @@ const Order = () => {
     setEmail(e.target.value)
   }
   let emailError;
-  if(email === ""){
+  if(email === ''){
     emailError = <>メールアドレスを入力して下さい</>
   }else if(email.match(/^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/)){
     emailError = ''
@@ -113,20 +113,21 @@ const Order = () => {
     setHour(Number(e.target.value))
   }
   const specifyDate =  Number(String(inputYear) + String(inputMonth)  + String(inputDate))
-  console.log(specifyDate)
   const specifyTime = inputYear + "-" + inputMonth + "-" + inputDate + "-"  + inputHour + ":" + "00"
-  if(inputYear === "" || inputMonth === '' || inputDate === '' || inputHour === ''){
+  console.log(specifyTime)
+  if(inputHour === ''){
     timeError = <>配達希望日時を入力</>
   }else if(orderDate - specifyDate > 0){
     timeError = <>過去の日付は選択できません</>
   }else if(orderDate === specifyDate){
     if(inputHour - hour < 4 || inputHour - hour < 0){
       timeError = <>3時間後以降の日時をご入力</>
+    }else{
+      timeError = ''
     }
   }else{
     timeError = ''
   }
-
   // 支払い方法入力、支払い方法エラー
   const [pay,setPay] = useState("")
   const changePay = e => {
@@ -162,10 +163,10 @@ const Order = () => {
   }
   // 注文ボタン押下
   let finalErrorMsg
-  const [finalError, setFinalError] = useState(false)
-  if(finalError){
-    finalErrorMsg = <>※入力に誤りのある箇所を修正してください</>
-  }
+  // const [finalError, setFinalError] = useState(false)
+  // if(finalError){
+  //   finalErrorMsg = <>※入力に誤りのある箇所を修正してください</>
+  // }
   const orderBtn = () => {
     const userId = user.uid
     const orderInfo = {
@@ -187,7 +188,7 @@ const Order = () => {
       creditcardNo: credit
     }
     // 「代金引換」を選択して、バリデーションに引っかからなかった場合
-    if(pay ===  CASH_ON_DELIVERY && nameError === '' && emailError === "" && zipcodeError === '' && addressError === '' && telError === '' && timeError === '' && payError === ''){
+    if(pay ===  CASH_ON_DELIVERY && nameError === '' && emailError === '' && zipcodeError === '' && addressError === '' && telError === '' && timeError === '' && payError === ''){
       orderInfo.status = CART_STATUS_UNPAID
       console.log(orderInfo)
       //action createrへの処理
@@ -196,7 +197,7 @@ const Order = () => {
       
       
       // 「クレジット」を選択してバリデーションに引っかからなかった場合
-    }else if(pay === CREDIT_CARD && nameError === '' && emailError === "" && zipcodeError === '' && addressError === '' && telError === '' && timeError === '' && payError === '' && creditError === ''){
+    }else if(pay === CREDIT_CARD && nameError === '' && emailError === '' && zipcodeError === '' && addressError === '' && telError === '' && timeError === '' && payError === '' && creditError === ''){
       orderInfo.status = CART_STATUS_PAID
       console.log(orderInfo)
           //action createrへの処理
@@ -205,7 +206,7 @@ const Order = () => {
       // バリデーションに一つでも引っかかった場合
     }else{
       console.log("エラーが残っています")
-      setFinalError(true)
+      // setFinalError(true)
     }
   }
 
@@ -343,9 +344,9 @@ const Order = () => {
     </Box>
     {creditInput}
     <Box mt={3}>
-      <div>
+      {/* <div>
         {finalErrorMsg}
-      </div>
+      </div> */}
       <Button variant="contained" style = {{width: 300}} onClick={() => {orderBtn()}} color="secondary">この内容で注文する</Button>
     </Box>
 </Box>
