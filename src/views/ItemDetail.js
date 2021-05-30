@@ -12,45 +12,54 @@ const ItemDetail = () => {
   useEffect(() => {
     dispatch(setItem());
     dispatch(setTopping());
-      return () => {
-        dispatch(deleteItem());
-        dispatch(deleteTopping());
-      };
+    return () => {
+      dispatch(deleteItem());
+      dispatch(deleteTopping());
+    };
   }, []);
 
-  //個数
-  const itemsSelector = (state) => state.item.items;
-  const items = useSelector(itemsSelector);
-  const { item_id } = useParams();
-  const itemIdNum = Number(item_id);
   const history = useHistory();
   const handleLink = (path) => history.push(path);
-  const [buyNum,setNum] = useState(1)
+
+  //パラメータ
+  const { item_id } = useParams();
+  const itemIdNum = Number(item_id);
+
+  //item
+  const itemsSelector = (state) => state.item.items;
+  const items = useSelector(itemsSelector);
+  let item = '';
+  items.forEach((i) => {
+    if (i.id === itemIdNum) {
+      item = i;
+  } })
+
+  //商品個数
+  const [buyNum, setNum] = useState(1);
   const handleChangebuyNum = (e) => {
     setNum(e.target.value)
-  }
-  const buyNum2 = Number(buyNum)
+  };
+  const buyNum2 = Number(buyNum);
 
-
- //トッピング
+  //トッピング
   const toppingsSelector = (state) => state.topping.toppings;
   const allToppings = useSelector(toppingsSelector);
-  const [toppings, setToppings] = useState([])
+  const [toppings, setToppings] = useState([]);
 
   const handleChangeTopping = (e) => {
     if (e.target.checked) {
-      let selectTopping = [...toppings, e.target.value]
-      setToppings(selectTopping)
+      let selectTopping = [...toppings, Number(e.target.value)];
+      setToppings(selectTopping);
 
     } else if (!e.target.checked) {
-      let selectTopping = toppings.filter(value => value !== e.target.value)
-      setToppings(selectTopping)
+      let selectTopping = toppings.filter(value => value !== Number(e.target.value));
+      setToppings(selectTopping);
     }
-  }
-  console.log(toppings)
+  };
+  console.log(toppings);
 
   //サイズ
-  const [size,setSize] = useState('M')
+  const [size, setSize] = useState('M')
   const addCartBtn = () => {
     const item = {
       id: new Date().getTime().toString(),
@@ -59,15 +68,41 @@ const ItemDetail = () => {
         itemId: itemIdNum,
         buyNum: buyNum2,
         size: size,
-        toppings:toppings
+        toppings: toppings
       }]
     }
     console.log(item)
   }
+
+  //合計金額
+
+  //多め配列
+  const topping1 = allToppings.filter(top => top.name.match('多め'))
+  //console.log(topping1);
+
+  //多め配列を選択されたトッピング配列と比較して、差分を出す
+  const top1Count = topping1.filter((top1) => toppings.indexOf(top1.id) == -1 );
+  console.log(top1Count) 
+  console.log(top1Count.length);　//選択されてない多めの数
+  console.log(toppings.length)
+  const newToppings = toppings.length
+
+  const topping2 = []
+  let addPrice = item.priceM
+  // if (size === 'M') { addPrice = item.priceM* 2; }
+  if (size === 'M') {
+      //if()
+        addPrice = item.priceM * buyNum2 + (200 * toppings.length)
+    } else if (size === 'L') {
+      addPrice = item.priceL * buyNum2 + (200 * toppings.length);
+    }
+  
+  // console.log(toppings.length)
+  // console.log(addPrice2);
+ 
   return (
     <React.Fragment>
       <h2 justify='center'>商品詳細</h2>
-        {items.filter((item) => {return item.id === itemIdNum;}).map((item) => (
       <div>
         <Grid container justify='center'>
               <Grid item xs={4} sm={5} >
@@ -101,7 +136,7 @@ const ItemDetail = () => {
                 onChange={handleChangebuyNum}
                 />
             <label htmlFor='topping'>
-                <p style={{ fontWeight: 'bold' }}>トッピング ※1ヶにつき　少なめ200円、普通量300円（税抜）</p>
+              <p style={{ fontWeight: 'bold' }}>トッピング ※1ヶにつき 200円、多め300円（税抜）</p>
             </label>
             <ul>
               {allToppings.map((topping, index) => (
@@ -110,15 +145,14 @@ const ItemDetail = () => {
                 </li>
               ))}
             </ul>
-            <h2>ご注文金額合計：{item.price}*個数+トッピング価格　円(税抜)</h2>
+            <h2>ご注文金額合計：{addPrice} 個数+トッピング価格　円(税抜)</h2>
                 <Button onClick={() => {addCartBtn()}} variant='contained' color='primary' dark='true'>
               カートに入れる
             </Button>
           </form>
         </Grid>
       </div>
-        ))}
     </React.Fragment>
   )
 }
-export default ItemDetail
+export default ItemDetail;
