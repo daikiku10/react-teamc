@@ -3,7 +3,8 @@ import {CARTSET, NEWCART, ADDCART, CARTRESET, ORDER, ORDERSET, ORDERRESET,} from
 
 const initialState = {
   cart:"",
-  orders:[]
+  orders:[],
+  userInfo:""
 }
 
 export default (state = initialState, action) => {
@@ -35,7 +36,8 @@ export default (state = initialState, action) => {
     case ORDER:
       return {
         cart:"",
-        orders:[...state.orders, action.orderInfo,action.userInfo]
+        orders:[],
+        userInfo:action.userInfo
       }
     default:
       return state
