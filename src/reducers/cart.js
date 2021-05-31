@@ -1,4 +1,4 @@
-import {CARTSET, NEWCART, ADDCART, CARTRESET, ORDER, ORDERSET, ORDERRESET, DELETECART, ORDERCANCEL} from '../actions/index'
+import {CARTSET, NEWCART, ADDCART, CARTRESET, ORDER, ORDERSET, ORDERRESET, DELETECART,UPDATEUSERINFO,NEWUSERINFO,ORDERCANCEL,USERINFOSET,USERINFORESET} from '../actions/index'
 
 const initialState = {
   cart:"",
@@ -12,25 +12,25 @@ export default (state = initialState, action) => {
       return {
         cart: action.cartData,
         orders:[],
-        userInfo:state.userInfo
+        userInfo:""
       }
     case NEWCART:
       return {
         cart: action.cartData,
         orders:[],
-        userInfo:state.userInfo
+        userInfo:""
       }
     case ADDCART:
       return {
         cart: action.cartData,
         orders:[],
-        userInfo:state.userInfo
+        userInfo:""
       }
     case CARTRESET:
       return {
         cart: "",
         orders:[],
-        userInfo:state.userInfo
+        userInfo:""
       }
     case DELETECART:
       return {
@@ -62,7 +62,31 @@ export default (state = initialState, action) => {
       return {
         cart:"",
         orders:[],
-        userInfo:action.userInfo
+        userInfo:state.userInfo
+      }
+    case NEWUSERINFO:
+      return{
+        cart: "",
+        orders:[],
+        userInfo: action.userInfo
+      }
+    case UPDATEUSERINFO:
+      return{
+        cart: "",
+        orders: [],
+        userInfo: action.userInfo
+      }
+    case USERINFOSET:
+      return{
+        cart: state.cart,
+        orders: [],
+        userInfo: action.userInfo
+      }
+    case USERINFORESET:
+      return{
+        cart: "",
+        orders:[],
+        userInfo: ""
       }
     case ORDERCANCEL:
       return {

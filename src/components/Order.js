@@ -3,16 +3,18 @@ import {Button,TextField,InputLabel,Box,MenuItem,Select,FormControl,FormHelperTe
 import {useHistory} from "react-router-dom" 
 import { CART_STATUS_UNPAID, CART_STATUS_PAID,CASH_ON_DELIVERY,CREDIT_CARD} from '../actions/status'
 import { useSelector, useDispatch } from "react-redux";
-import { cartReset, order } from '../actions/index'
+import { cartReset, order,newUserInfo,updateUserInfo } from '../actions/index'
 
 const userSelector = (state) => state.user.user;
 const cartSelector = state => state.cart.cart
+const userInfoSelector = state => state.cart.userInfo
 const Order = () => {
   const history = useHistory()
   const dispatch = useDispatch()
   const handleLink = path => history.push(path)
   const cart = useSelector(cartSelector);
   const user = useSelector(userSelector);
+  const userInfo = useSelector(userInfoSelector)
   const userId = user.uid
   
   // 名前入力、名前エラー
@@ -94,7 +96,6 @@ const Order = () => {
   const hour = today.getHours()
   const second = today.getSeconds()
   const orderDate = Number(year + month + day)
-  console.log(orderDate)
   const orderTime = year + "-" + month + "-" + day + "-" + hour + ":" + second
   const [inputYear, setYear] = useState(year)
   const changeYear = (e) => {
@@ -114,7 +115,6 @@ const Order = () => {
   }
   const specifyDate =  Number(String(inputYear) + String(inputMonth)  + String(inputDate))
   const specifyTime = inputYear + "-" + inputMonth + "-" + inputDate + "-"  + inputHour + ":" + "00"
-  console.log(specifyTime)
   if(inputHour === ''){
     timeError = <>配達希望日時を入力</>
   }else if(orderDate - specifyDate > 0){
@@ -163,10 +163,10 @@ const Order = () => {
   }
   // 注文ボタン押下
   let finalErrorMsg
-  // const [finalError, setFinalError] = useState(false)
-  // if(finalError){
-  //   finalErrorMsg = <>※入力に誤りのある箇所を修正してください</>
-  // }
+  const [finalError, setFinalError] = useState(false)
+  if(finalError){
+    finalErrorMsg = <>※入力に誤りのある箇所を修正してください</>
+  }
   const orderBtn = () => {
     const userId = user.uid
     const orderInfo = {
@@ -187,11 +187,25 @@ const Order = () => {
       paymentMethod: pay,
       creditcardNo: credit
     }
+    const userInfoData = {
+      userName: name,
+      email: email,
+      zipcode: zipcode,
+      address: address,
+      tel: tel,
+      creditcardNo: credit
+    }
     // 「代金引換」を選択して、バリデーションに引っかからなかった場合
     if(pay ===  CASH_ON_DELIVERY && nameError === '' && emailError === '' && zipcodeError === '' && addressError === '' && telError === '' && timeError === '' && payError === ''){
       orderInfo.status = CART_STATUS_UNPAID
-      console.log(orderInfo)
       //action createrへの処理
+      if(userInfo === ""){
+        dispatch(newUserInfo(user,userInfoData))
+      }else{
+        userInfoData.id = userInfo.id
+        dispatch(updateUserInfo(user,userInfoData))
+      }
+
       dispatch(order(user, orderInfo))
       handleLink('/order-complete')
       
@@ -199,14 +213,17 @@ const Order = () => {
       // 「クレジット」を選択してバリデーションに引っかからなかった場合
     }else if(pay === CREDIT_CARD && nameError === '' && emailError === '' && zipcodeError === '' && addressError === '' && telError === '' && timeError === '' && payError === '' && creditError === ''){
       orderInfo.status = CART_STATUS_PAID
-      console.log(orderInfo)
           //action createrへの処理
+          if(userInfo === ""){
+            dispatch(newUserInfo(user,userInfoData))
+          }else{
+            dispatch(updateUserInfo(user,userInfoData))
+          }
           dispatch(order(user, orderInfo))
           handleLink('/order-complete')
       // バリデーションに一つでも引っかかった場合
     }else{
-      console.log("エラーが残っています")
-      // setFinalError(true)
+      setFinalError(true)
     }
   }
 
@@ -335,7 +352,7 @@ const Order = () => {
     </Box>
     <Box mt={2}>
       <FormControl>
-        <Select id="pay" onChange={changePay} value={pay} style = {{width: 400}} color="secondary" helperText={payError}>
+        <Select id="pay" onChange={changePay} value={pay} style = {{width: 400}} color="secondary">
         <MenuItem value="" disabled>支払い方法を選択</MenuItem>
           <MenuItem value={CASH_ON_DELIVERY}>代金引換</MenuItem>
           <MenuItem value={CREDIT_CARD}>クレジットカード決済</MenuItem>
@@ -345,9 +362,9 @@ const Order = () => {
     </Box>
     {creditInput}
     <Box mt={3}>
-      {/* <div>
+      <div>
         {finalErrorMsg}
-      </div> */}
+      </div>
       <Button variant="contained" style = {{width: 300}} onClick={() => {orderBtn()}} color="secondary">この内容で注文する</Button>
     </Box>
 </Box>
