@@ -60,17 +60,16 @@ const Header = () => {
                 >
                   ショッピングカート
                 </Button>
-                <Button
-                  color="inherit"
-                  onClick={() => handleLink("/order-history")}
-                >
-                  注文履歴
-                </Button>
                 <>
                   {user ? (
-                    <Button color="inherit" onClick={logout}>
-                      ログアウト
-                    </Button>
+                    <>
+                      <Button color="inherit" onClick={() => handleLink("/order-history")}>
+                      注文履歴
+                      </Button>
+                      <Button color="inherit" onClick={logout}>
+                        ログアウト
+                      </Button>
+                    </>
                   ) : (
                     <Button color="inherit" onClick={login}>
                       ログイン
