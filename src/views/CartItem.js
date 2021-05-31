@@ -47,7 +47,7 @@ const CartItem = () => {
   const [price, setPrice] = useState(0)
   const [toppingPrice, setToppingPrice] = useState(0)
 
-  // アイテム・トッピングを持ってくる　
+  // アイテム・トッピングを持ってくる
   useEffect(() => {
     dispatch(setItem())
     dispatch(setTopping())
@@ -66,7 +66,7 @@ const CartItem = () => {
     if(user){
       dispatch(cartSet(user))
     }
-  },[items])
+  },[user])
 
   // 商品合計金額
   useEffect(() => {
@@ -131,8 +131,8 @@ const CartItem = () => {
             <TableHead>
               <TableRow>
                 <StyledTableCell>商品名</StyledTableCell>
-                <StyledTableCell align="center">サイズ、価格（税抜き）、数量</StyledTableCell>
-                <StyledTableCell align="center">トッピング価格（税抜き）</StyledTableCell>
+                <StyledTableCell align="center">サイズ、価格、数量</StyledTableCell>
+                <StyledTableCell align="center">トッピング価格</StyledTableCell>
                 <StyledTableCell align="center">小計</StyledTableCell>
                 <StyledTableCell align="center">削除</StyledTableCell>
               </TableRow>
