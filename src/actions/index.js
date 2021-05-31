@@ -155,3 +155,13 @@ export const order = (user, orderInfo) => dispatch => {
     })
   }) 
 }
+
+export const ORDERCANCEL = 'orderCancel'
+export const orderCancel = (user,orderInfo) => dispatch => {
+  firebase.firestore().collection(`users/${user.uid}/orders`).doc(orderInfo.orderId).update(orderInfo).then(() => {
+    return dispatch ({
+      type:ORDERCANCEL,
+      orderInfo:orderInfo
+    })
+  })
+}

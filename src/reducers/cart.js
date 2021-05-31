@@ -1,4 +1,4 @@
-import {CARTSET, NEWCART, ADDCART, CARTRESET, ORDER, ORDERSET, ORDERRESET, DELETECART,} from '../actions/index'
+import {CARTSET, NEWCART, ADDCART, CARTRESET, ORDER, ORDERSET, ORDERRESET, DELETECART, ORDERCANCEL} from '../actions/index'
 
 const initialState = {
   cart:"",
@@ -63,6 +63,12 @@ export default (state = initialState, action) => {
         cart:"",
         orders:[],
         userInfo:action.userInfo
+      }
+    case ORDERCANCEL:
+      return {
+        cart:"",
+        orders:[...state.orders],
+        userInfo:state.userInfo
       }
     default:
       return state

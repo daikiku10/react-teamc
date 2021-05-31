@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import {CART_STATUS_UNPAID, CART_STATUS_PAID, CART_STATUS_UNDELIVERIED, CART_STATUS_DELIVERIDE, CART_STATUS_CANCEL} from '../actions/status';
 import firebase from 'firebase';
 import {useSelector, useDispatch} from 'react-redux'
-import {orderSet, setItem, setTopping, deleteItem, deleteTopping, cartReset, orderReset} from "../actions"
+import {orderSet, setItem, setTopping, deleteItem, deleteTopping, cartReset, orderReset, orderCancel} from "../actions"
 import {List, Divider, ListItem, ListItemAvatar, ListItemText, Button, Grid} from '@material-ui/core';
 import {makeStyles} from "@material-ui/core/styles";
 
@@ -66,6 +66,11 @@ const OrderHistory = () => {
       dispatch(orderSet(user))
     }
   },[user])
+
+  const CancelBtn = (order) => {
+    order.status = CART_STATUS_CANCEL
+    dispatch(orderCancel(user,order))
+  }
   const orders1 = orders.length
   return (
     <React.Fragment>
@@ -114,7 +119,7 @@ const OrderHistory = () => {
             ))}
             <div className="module-spacer--extra-extra-small" />
             <Grid container justify="flex-end">
-            <Button variant="outlined">キャンセル</Button>
+            <Button variant="outlined" onClick={() => CancelBtn(order)}>キャンセル</Button>
             </Grid>
             <p></p>
             <Divider />
@@ -161,7 +166,7 @@ const OrderHistory = () => {
             ))}
             <div className="module-spacer--extra-extra-small" />
             <Grid container justify="flex-end">
-            <Button variant="outlined">キャンセル</Button>
+            <Button variant="outlined" onClick={() => CancelBtn(order)}>キャンセル</Button>
             </Grid>
             <p></p>
             <Divider />
