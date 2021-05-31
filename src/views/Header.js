@@ -30,6 +30,7 @@ const Header = () => {
   const login = () => {
     const google_auth_provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithRedirect(google_auth_provider);
+    dispatch(cartReset());
     handleLink("/cart-item");
   };
   const logout = () => {
@@ -51,7 +52,7 @@ const Header = () => {
               >
                 ラクラクラーメン
               </Typography>
-              <>{user ? <p>{user.displayName}</p> : <p></p>}</>
+              <>{user ? <>{user.displayName}</> : <></>}</>
               <Route>
                 <Button
                   color="inherit"
