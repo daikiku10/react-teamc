@@ -3,7 +3,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import { cartSet, setTopping, setItem, deleteItem, deleteTopping, cartReset, orderReset, deleteCart,userInfoSet,userInfoReset  } from '../actions/index';
 import firebase from 'firebase';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import {Container, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,Box, Typography, List, ListItemText} from '@material-ui/core';
+import {Container, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,Box, Typography, List, ListItemText, IconButton} from '@material-ui/core';
 import Order from '../components/Order'
 import {useHistory} from "react-router-dom" 
 
@@ -77,7 +77,7 @@ const CartItem = () => {
       cart.itemInfo.map(data => (
         items.filter(noodle => { return data.itemId === noodle.id 
         }).map(item => (
-          (data.size === "M" ? price += item.priceM : price += item.priceL)
+          (data.size === "M" ? price += item.priceM * data.buyNum : price += item.priceL * data.buyNum)
         ))
       ))
     }
