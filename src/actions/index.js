@@ -64,23 +64,54 @@ export const cartReset = () => ({
 
 export const NEWCART = 'newCart'
 export const newCart = (user, cart) => dispatch => {
-  firebase.firestore().collection(`users/${user.uid}/orders`).add(cart).then(doc => {
-    cart.orderId = doc.id
+  if(user){
+    firebase.firestore().collection(`users/${user.uid}/orders`).add(cart).then(doc => {
+      cart.orderId = doc.id
+      return dispatch ({
+        type:NEWCART,
+        cartData:cart
+      })
+    })
+  } else {
     return dispatch ({
       type:NEWCART,
       cartData:cart
     })
-  })
+  }
 }
 
 export const ADDCART = 'addCart'
 export const addCart = (user, cart) => dispatch => {
-  firebase.firestore().collection(`users/${user.uid}/orders`).doc(cart.orderId).update(cart).then(() => {
+  if(user){
+    firebase.firestore().collection(`users/${user.uid}/orders`).doc(cart.orderId).update(cart).then(() => {
+      return dispatch ({
+        type:ADDCART,
+        cartData:cart
+      })
+    })
+  } else {
     return dispatch ({
       type:ADDCART,
       cartData:cart
     })
-  })
+  }
+}
+
+export const DELETECART = 'deleteCart'
+export const deleteCart = (user, cart) => dispatch => {
+  if(user){
+    firebase.firestore().collection(`users/${user.uid}/orders`).doc(cart.orderId).update(cart).then(() => {
+      return dispatch ({
+        type:DELETECART,
+        cartData:cart
+      })
+    })
+  } else {
+    return dispatch ({
+      type:DELETECART,
+      cartData:cart
+    })
+  }
 }
 
 export const ORDERSET = 'orderSet'

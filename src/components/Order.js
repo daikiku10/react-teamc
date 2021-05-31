@@ -94,7 +94,6 @@ const Order = () => {
   const hour = today.getHours()
   const second = today.getSeconds()
   const orderDate = Number(year + month + day)
-  console.log(orderDate)
   const orderTime = year + "-" + month + "-" + day + "-" + hour + ":" + second
   const [inputYear, setYear] = useState(year)
   const changeYear = (e) => {
@@ -114,7 +113,6 @@ const Order = () => {
   }
   const specifyDate =  Number(String(inputYear) + String(inputMonth)  + String(inputDate))
   const specifyTime = inputYear + "-" + inputMonth + "-" + inputDate + "-"  + inputHour + ":" + "00"
-  console.log(specifyTime)
   if(inputHour === ''){
     timeError = <>配達希望日時を入力</>
   }else if(orderDate - specifyDate > 0){
@@ -190,7 +188,6 @@ const Order = () => {
     // 「代金引換」を選択して、バリデーションに引っかからなかった場合
     if(pay ===  CASH_ON_DELIVERY && nameError === '' && emailError === '' && zipcodeError === '' && addressError === '' && telError === '' && timeError === '' && payError === ''){
       orderInfo.status = CART_STATUS_UNPAID
-      console.log(orderInfo)
       //action createrへの処理
       dispatch(order(user, orderInfo))
       handleLink('/order-complete')
@@ -199,7 +196,6 @@ const Order = () => {
       // 「クレジット」を選択してバリデーションに引っかからなかった場合
     }else if(pay === CREDIT_CARD && nameError === '' && emailError === '' && zipcodeError === '' && addressError === '' && telError === '' && timeError === '' && payError === '' && creditError === ''){
       orderInfo.status = CART_STATUS_PAID
-      console.log(orderInfo)
           //action createrへの処理
           dispatch(order(user, orderInfo))
           handleLink('/order-complete')
