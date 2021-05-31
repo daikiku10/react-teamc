@@ -137,21 +137,54 @@ export const orderReset = () => ({
 export const ORDER = 'order'
 export const order = (user, orderInfo) => dispatch => {
   firebase.firestore().collection(`users/${user.uid}/orders`).doc(orderInfo.orderId).update(orderInfo).then(() => {
-    let userInfo = {
-      userName: orderInfo.destinationName,
-      email: orderInfo.destinationEmail,
-      zipcode: orderInfo.destinationZipcode,
-      address: orderInfo.destinationAddress,
-      tel: orderInfo.tel,
-      creditcardNo: orderInfo.creditcardNo
-    }
-    firebase.firestore().collection(`users/${user.uid}/userInfo`).add(userInfo).then(() => {
+    // let userInfo = {
+    //   userName: orderInfo.destinationName,
+    //   email: orderInfo.destinationEmail,
+    //   zipcode: orderInfo.destinationZipcode,
+    //   address: orderInfo.destinationAddress,
+    //   tel: orderInfo.tel,
+    //   creditcardNo: orderInfo.creditcardNo
+    // }
+    // firebase.firestore().collection(`users/${user.uid}/userInfo`).add(userInfo).then(() => {
 
       return dispatch ({
         type:ORDER,
         orderInfo:orderInfo,
+        // userInfo: userInfo
+      })
+    // })
+  }) 
+}
+export const NEWUSERINFO = "newUserInfo"
+export const newUserInfo = (user,userInfo) => dispatch => {
+  if(user){
+    firebase.firestore().collection(`users/${user.uid}/userInfo`).add(userInfo).then(doc => {
+      userInfo.id = doc.id
+      return dispatch ({
+        type: NEWUSERINFO,
         userInfo: userInfo
       })
     })
-  }) 
+  }else{
+    return dispatch({
+      type: NEWUSERINFO,
+      userInfo: userInfo
+    })
+  }
+}
+export const UPDATEUSERINFO = "updateUserInfo"
+export const updateUserInfo = (user,userInfo) => dispatch => {
+  if(user){
+    firebase.firestore().collection(`users/${user.uid}/userInfo`).doc(userInfo.id).update(userInfo).then(() => {
+      return dispatch({
+        type: UPDATEUSERINFO,
+        userInfo: userInfo
+      })
+    })
+  }else{
+    return dispatch({
+      type: UPDATEUSERINFO,
+      userInfo: userInfo
+    })
+  }
 }

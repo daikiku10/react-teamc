@@ -3,7 +3,7 @@ import {Button,TextField,InputLabel,Box,MenuItem,Select,FormControl,FormHelperTe
 import {useHistory} from "react-router-dom" 
 import { CART_STATUS_UNPAID, CART_STATUS_PAID,CASH_ON_DELIVERY,CREDIT_CARD} from '../actions/status'
 import { useSelector, useDispatch } from "react-redux";
-import { cartReset, order } from '../actions/index'
+import { cartReset, order,newUserInfo,updateUserInfo } from '../actions/index'
 
 const userSelector = (state) => state.user.user;
 const cartSelector = state => state.cart.cart
@@ -187,10 +187,24 @@ const Order = () => {
       paymentMethod: pay,
       creditcardNo: credit
     }
+    const userInfo = {
+      userName: name,
+      email: email,
+      zipcode: zipcode,
+      address: address,
+      tel: tel,
+      creditcardNo: credit
+    }
     // 「代金引換」を選択して、バリデーションに引っかからなかった場合
     if(pay ===  CASH_ON_DELIVERY && nameError === '' && emailError === '' && zipcodeError === '' && addressError === '' && telError === '' && timeError === '' && payError === ''){
       orderInfo.status = CART_STATUS_UNPAID
       //action createrへの処理
+      if(userInfo === ""){
+        dispatch(newUserInfo(user,userInfo))
+      }else{
+        dispatch(updateUserInfo(user,userInfo))
+      }
+
       dispatch(order(user, orderInfo))
       handleLink('/order-complete')
       
@@ -199,6 +213,11 @@ const Order = () => {
     }else if(pay === CREDIT_CARD && nameError === '' && emailError === '' && zipcodeError === '' && addressError === '' && telError === '' && timeError === '' && payError === '' && creditError === ''){
       orderInfo.status = CART_STATUS_PAID
           //action createrへの処理
+          if(userInfo === ""){
+            dispatch(newUserInfo(user,userInfo))
+          }else{
+            dispatch(updateUserInfo(user,userInfo))
+          }
           dispatch(order(user, orderInfo))
           handleLink('/order-complete')
       // バリデーションに一つでも引っかかった場合

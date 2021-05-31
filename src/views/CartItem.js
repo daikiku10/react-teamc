@@ -34,7 +34,7 @@ const useStyles = makeStyles({
     minWidth: 700,
   },
 });
-// -----------------------------------------------
+
 
 const CartItem = () => {
   const user = useSelector(userSelector)
