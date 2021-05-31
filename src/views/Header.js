@@ -43,7 +43,7 @@ const Header = () => {
     <>
       <div className={classes.root}>
         <Router>
-          <AppBar position="static" color="secondary">
+          <AppBar position="static" style={{ color: "#fff", backgroundColor: "#CF000D"}}>
             <Toolbar>
               <Typography
                 variant="h6"
