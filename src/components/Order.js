@@ -167,6 +167,15 @@ const Order = () => {
   if(finalError){
     finalErrorMsg = <>※入力に誤りのある箇所を修正してください</>
   }
+  const fetchUserInfo = () => {
+    console.log("fetch")
+    setName(userInfo.userName)
+    setEmail(userInfo.email)
+    setAddress(userInfo.address)
+    setZipcode(userInfo.zipcode)
+    setTel(userInfo.tel)
+    SetCredit(userInfo.creditcardNo)
+  }
   const orderBtn = () => {
     const userId = user.uid
     const orderInfo = {
@@ -230,7 +239,7 @@ const Order = () => {
   return(
     <Box align="center">
       <h2>お届先情報</h2>
-      <button>fetch</button>
+      {userInfo? <button onClick={() => {fetchUserInfo()}}>登録情報の呼び出し</button>: <></>}
       <Box>
         <TextField label="お名前"  type="text" value={name}  style = {{width: 400}} onChange={changeName} helperText={nameError} color="secondary"/>
       </Box>
