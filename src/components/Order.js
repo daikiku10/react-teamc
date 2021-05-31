@@ -168,7 +168,6 @@ const Order = () => {
     finalErrorMsg = <>※入力に誤りのある箇所を修正してください</>
   }
   const fetchUserInfo = () => {
-    console.log("fetch")
     setName(userInfo.userName)
     setEmail(userInfo.email)
     setAddress(userInfo.address)
@@ -226,6 +225,7 @@ const Order = () => {
           if(userInfo === ""){
             dispatch(newUserInfo(user,userInfoData))
           }else{
+            userInfoData.id = userInfo.id
             dispatch(updateUserInfo(user,userInfoData))
           }
           dispatch(order(user, orderInfo))
