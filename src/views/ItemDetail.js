@@ -1,17 +1,26 @@
-import React, {useEffect, useState} from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import {useHistory, useParams} from 'react-router-dom';
-import {useSelector, useDispatch} from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { makeStyles } from "@material-ui/core/styles";
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import { Link } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 import { setItem, deleteItem, setTopping, deleteTopping, newCart, addCart, cartSet } from '../actions/index';
 import { CART_STATUS_IN } from '../actions/status';
 
-const userSelector = state => state.user.user
-const cartSelector = state => state.cart.cart
+const useStyles = makeStyles({
+  grid: {
+  margin: "50px 0 100px 0",
+  },
+
+  form: {
+  margin: "20px 0 0 0"
+  }
+});
 
 const ItemDetail = () => {
+  const classes = useStyles();
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(setItem());
@@ -22,15 +31,16 @@ const ItemDetail = () => {
       };
   }, []);
 
-  
-  const itemsSelector = (state) => state.item.items;
-  const user = useSelector(userSelector);
-  const cart = useSelector(cartSelector);
-  const items = useSelector(itemsSelector);
-  const { item_id } = useParams();
-  const itemIdNum = Number(item_id);
-  const history = useHistory();
-  const handleLink = (path) => history.push(path);
+   const userSelector = state => state.user.user
+   const cartSelector = state => state.cart.cart
+   const itemsSelector = state => state.item.items;
+   const user = useSelector(userSelector);
+   const cart = useSelector(cartSelector);
+   const items = useSelector(itemsSelector);
+   const { item_id } = useParams();
+   const itemIdNum = Number(item_id);
+   const history = useHistory();
+   const handleLink = (path) => history.push(path);
 
   //個数
   const [buyNum,setNum] = useState(1)
@@ -109,64 +119,62 @@ const ItemDetail = () => {
   //合計金額  
   let addPrice = item.priceM
   if (size === 'M') {
-      addPrice = item.priceM * buyNum2 + ((200 * TopNum1) + (300 * TopNum2))
+      addPrice = item.priceM * buyNum2 + ((200 * (TopNum1 * buyNum2)) + ((300 * TopNum2 * buyNum2)))
     } else if (size === 'L') {
-      addPrice = item.priceL * buyNum2 + ((200 * TopNum1) + (300 * TopNum2))
+      addPrice = item.priceL * buyNum2 + ((200 * (TopNum1 * buyNum2)) + ((300 * TopNum2 * buyNum2)))
     }
 
   return (
     <React.Fragment>
-      <h2 justify='center'>商品詳細</h2>
+      <div className={classes.grid}>
         <Grid container justify='center'>
               <Grid item xs={4} sm={5} >
                 <div text-align='center'><img src={`/${item.imagePath}`} style={{ width: 400, height: 300 }}></img></div>
               </Grid>
-              <Grid item xs={4} sm={5}>
-                <h3>{item.name}</h3> <br />
-                <br />
+        <Grid item xs={4} sm={5}>
+          <h2 justify='center'>商品詳細</h2>
+            <h3>{ console.log('レンダリング')}{item.name}</h3> <br />
                 <p>{item.description}</p>
               </Grid>
         </Grid>
         <Grid container justify='center'>
-          <form>
-          <p style={{ fontWeight:'bold' }}>サイズ </p>
-              <label className='radio-inline'>
+          <form className={classes.form}>
+            <p style={{ fontWeight:'bold' }}>サイズ </p>
+              <label>
                 <input type='radio' value='M' onChange={() => {setSize('M')}} checked={size === 'M'}/>
-                <span className='price'>&nbsp;М&nbsp;</span>&nbsp;&nbsp;{item.priceM}円(税抜)
+                <span className='price'> Ｍ </span>{item.priceM}円(税抜)　　
               </label>
-              <label className='radio-inline'>
-                <input type='radio' checked={size === 'L'} onChange={() =>  {setSize('L')}}/>
-                <span className='price'>&nbsp;Ｌ</span>&nbsp;&nbsp;{item.priceL}円(税抜)
+              <label>
+                <input type='radio' value='L' checked={size === 'L'} onChange={() =>  {setSize('L')}}/>
+                <span className='price'>  Ｌ </span>{item.priceL}円(税抜)
               </label><p />
-            <span style={{ fontWeight: 'bold' }}>数量：</span>
-            <span style={{ color: 'red', fontWeight: 'bold' }}>数量を選択してください</span><br/>
-              <TextField
-                id='outlined-number'
-                type='number'
-                defaultValue='1'
-                value={buyNum}
-                InputProps={{ inputProps: { min: 1, max: 10 } }}
-                onChange={handleChangebuyNum}
-            /><p/>
-          </form>
-        </Grid>
-      <Grid container justify='center' margin='spacing' xs={4} sm={5} >
-        <Grid item justify='center' xs={4} sm={10} >
-          <form>
+            
             <label htmlFor='topping'>
               <p><span style={{ fontWeight: 'bold' }}>トッピング：</span>
-              <span style={{ color: 'red', fontWeight: 'bold' }}> ※1ヶにつき　200円、多めは300円（税抜）</span></p>
+              <span style={{ color: 'red', fontWeight: 'bold' }}> ※1ヶにつき200円、多めは300円（税抜）</span></p>
             </label>
-              {allToppings.map((topping, index) => (
-                  <label><input type='checkbox' name='topping' value={topping.id} onChange={() => handleChangeTopping}/>{topping.name}</label>
+              {allToppings.map((topping) => (
+                  <label key={topping.id}><input type='checkbox' name='topping' value={topping.id} onChange={() => handleChangeTopping}/>{topping.name}</label>
               ))}
-            <h2>ご注文金額合計：{addPrice}　円(税抜)</h2>
-            <Button onClick={addCartBtn} variant='contained' color='primary' dark='true'>
+            <br /><br/>
+            
+            <span style={{ fontWeight: 'bold' }}>数量：</span>
+            <span style={{ color: 'red', fontWeight: 'bold' }}>数量を選択してください</span><br/>
+            <TextField
+              id='outlined-number'
+              type='number'
+              value={buyNum}
+              InputProps={{ inputProps: { min: 1, max: 10 } }}
+              onChange={(e) => { handleChangebuyNum(e) }}
+            /><p />
+            
+            <h2>ご注文金額合計：{console.log('確認')}{addPrice}　円(税抜)</h2>
+            <Button onClick={addCartBtn} variant='contained' color='secondary' dark='true'>
             カートに入れる
             </Button>
           </form>
         </Grid>
-      </Grid>
+      </div>
     </React.Fragment>
   )
 }
