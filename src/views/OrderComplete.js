@@ -1,5 +1,6 @@
 import React, {useEffect} from "react";
-import {useHistory} from 'react-router-dom';
+import {useHistory, BrowserRouter as Router, Switch, Route, Redirect, Link} from 'react-router-dom';
+import Home from './Home';
 import {useDispatch} from 'react-redux';
 import firebase from 'firebase';
 import {CART_STATUS_UNPAID, CART_STATUS_PAID} from '../actions/status';
@@ -21,7 +22,7 @@ const OrderComplete = () => {
   const handleLink = path => history.push(path);
   
   return(
-      <React.Fragment>
+      <Router>
         <Container maxWidth="sm" textAlign="center">
       <h2>決済が完了しました！</h2>
       <p>この度はご注文ありがとうございます。</p>
@@ -30,6 +31,11 @@ const OrderComplete = () => {
       <Button variant="outlined" color="secondary" onClick={() => handleLink('/')}>
       トップ画面に戻る
       </Button>
+      {/* <Button variant="outlined" color="secondary">
+        <Link to="/">
+      トップ画面に戻る
+      </Link>
+      </Button> */}
       </Container>
           {/* {orders.map((order,index) => (
           <div key={index}>
@@ -86,7 +92,10 @@ const OrderComplete = () => {
       </div>))}
       </List>
     </section> */}
-      </React.Fragment>
+    {/* <Switch>
+      <Redirect to="/" component={Home}></Redirect>
+    </Switch> */}
+      </Router>
   )
 }
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import { cartSet, setTopping, setItem, deleteItem, deleteTopping, cartReset, orderReset, deleteCart } from '../actions/index';
+import { cartSet, setTopping, setItem, deleteItem, deleteTopping, cartReset, orderReset, deleteCart,userInfoSet,userInfoReset  } from '../actions/index';
 import firebase from 'firebase';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import {Container, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,Box, Typography, List, ListItemText} from '@material-ui/core';
@@ -57,6 +57,7 @@ const CartItem = () => {
       if(user){
         dispatch(cartReset())
         dispatch(orderReset())
+        dispatch(userInfoReset())
       }
     }
   },[])
@@ -65,6 +66,7 @@ const CartItem = () => {
   useEffect(() => {
     if(user){
       dispatch(cartSet(user))
+      dispatch(userInfoSet(user))
     }
   },[user])
 

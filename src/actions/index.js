@@ -156,35 +156,64 @@ export const order = (user, orderInfo) => dispatch => {
   }) 
 }
 export const NEWUSERINFO = "newUserInfo"
-export const newUserInfo = (user,userInfo) => dispatch => {
+export const newUserInfo = (user,userInfoData) => dispatch => {
   if(user){
-    firebase.firestore().collection(`users/${user.uid}/userInfo`).add(userInfo).then(doc => {
-      userInfo.id = doc.id
+    firebase.firestore().collection(`users/${user.uid}/userInfo`).add(userInfoData).then(doc => {
+      userInfoData.id = doc.id
       return dispatch ({
         type: NEWUSERINFO,
-        userInfo: userInfo
+        userInfo: userInfoData
       })
     })
   }else{
     return dispatch({
       type: NEWUSERINFO,
-      userInfo: userInfo
+      userInfo: userInfoData
     })
   }
 }
 export const UPDATEUSERINFO = "updateUserInfo"
-export const updateUserInfo = (user,userInfo) => dispatch => {
+export const updateUserInfo = (user,userInfoData) => dispatch => {
   if(user){
-    firebase.firestore().collection(`users/${user.uid}/userInfo`).doc(userInfo.id).update(userInfo).then(() => {
+    firebase.firestore().collection(`users/${user.uid}/userInfo`).doc(userInfoData.id).update(userInfoData).then(() => {
       return dispatch({
         type: UPDATEUSERINFO,
-        userInfo: userInfo
+        userInfo: userInfoData
       })
     })
   }else{
     return dispatch({
       type: UPDATEUSERINFO,
-      userInfo: userInfo
+      userInfo: userInfoData
     })
   }
+}
+
+export const USERINFOSET = 'userInfoSet'
+export const userInfoSet = (user) => dispatch => {
+  firebase.firestore().collection(`users/${user.uid}/userInfo`).get().then(snapshot => {
+    snapshot.forEach(item => {
+      const data = item.data()
+      data.id = item.id
+          dispatch ({
+            type:USERINFOSET,
+            userInfo: data
+          })
+    })
+  })
+}
+
+export const USERINFORESET = 'userInfoReset'
+export const userInfoReset = () => ({
+  type:USERINFORESET
+})
+
+export const ORDERCANCEL = 'orderCancel'
+export const orderCancel = (user,orderInfo) => dispatch => {
+  firebase.firestore().collection(`users/${user.uid}/orders`).doc(orderInfo.orderId).update(orderInfo).then(() => {
+    return dispatch ({
+      type:ORDERCANCEL,
+      orderInfo:orderInfo
+    })
+  })
 }

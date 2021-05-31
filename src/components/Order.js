@@ -187,7 +187,7 @@ const Order = () => {
       paymentMethod: pay,
       creditcardNo: credit
     }
-    const userInfo = {
+    const userInfoData = {
       userName: name,
       email: email,
       zipcode: zipcode,
@@ -200,9 +200,10 @@ const Order = () => {
       orderInfo.status = CART_STATUS_UNPAID
       //action createrへの処理
       if(userInfo === ""){
-        dispatch(newUserInfo(user,userInfo))
+        dispatch(newUserInfo(user,userInfoData))
       }else{
-        dispatch(updateUserInfo(user,userInfo))
+        userInfoData.id = userInfo.id
+        dispatch(updateUserInfo(user,userInfoData))
       }
 
       dispatch(order(user, orderInfo))
@@ -214,9 +215,9 @@ const Order = () => {
       orderInfo.status = CART_STATUS_PAID
           //action createrへの処理
           if(userInfo === ""){
-            dispatch(newUserInfo(user,userInfo))
+            dispatch(newUserInfo(user,userInfoData))
           }else{
-            dispatch(updateUserInfo(user,userInfo))
+            dispatch(updateUserInfo(user,userInfoData))
           }
           dispatch(order(user, orderInfo))
           handleLink('/order-complete')
