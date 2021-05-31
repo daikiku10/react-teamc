@@ -7,14 +7,14 @@ import { cartReset, order } from '../actions/index'
 
 const userSelector = (state) => state.user.user;
 const cartSelector = state => state.cart.cart
-const userInfoselector = state => state.cart.userInfo
+const userInfoSelector = state => state.cart.userInfo
 const Order = () => {
   const history = useHistory()
   const dispatch = useDispatch()
   const handleLink = path => history.push(path)
   const cart = useSelector(cartSelector);
   const user = useSelector(userSelector);
-  const userInfo = userSelector(userSelector)
+  const userInfo = useSelector(userInfoSelector)
   const userId = user.uid
   
   // 名前入力、名前エラー
@@ -203,7 +203,6 @@ const Order = () => {
           handleLink('/order-complete')
       // バリデーションに一つでも引っかかった場合
     }else{
-      console.log("エラーが残っています")
       setFinalError(true)
     }
   }
