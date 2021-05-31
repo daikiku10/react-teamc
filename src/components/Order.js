@@ -7,12 +7,14 @@ import { cartReset, order } from '../actions/index'
 
 const userSelector = (state) => state.user.user;
 const cartSelector = state => state.cart.cart
+const userInfoselector = state => state.cart.userInfo
 const Order = () => {
   const history = useHistory()
   const dispatch = useDispatch()
   const handleLink = path => history.push(path)
   const cart = useSelector(cartSelector);
   const user = useSelector(userSelector);
+  const userInfo = userSelector(userSelector)
   const userId = user.uid
   
   // 名前入力、名前エラー
@@ -161,10 +163,10 @@ const Order = () => {
   }
   // 注文ボタン押下
   let finalErrorMsg
-  // const [finalError, setFinalError] = useState(false)
-  // if(finalError){
-  //   finalErrorMsg = <>※入力に誤りのある箇所を修正してください</>
-  // }
+  const [finalError, setFinalError] = useState(false)
+  if(finalError){
+    finalErrorMsg = <>※入力に誤りのある箇所を修正してください</>
+  }
   const orderBtn = () => {
     const userId = user.uid
     const orderInfo = {
@@ -202,7 +204,7 @@ const Order = () => {
       // バリデーションに一つでも引っかかった場合
     }else{
       console.log("エラーが残っています")
-      // setFinalError(true)
+      setFinalError(true)
     }
   }
 
@@ -331,7 +333,7 @@ const Order = () => {
     </Box>
     <Box mt={2}>
       <FormControl>
-        <Select id="pay" onChange={changePay} value={pay} style = {{width: 400}} color="secondary" helperText={payError}>
+        <Select id="pay" onChange={changePay} value={pay} style = {{width: 400}} color="secondary">
         <MenuItem value="" disabled>支払い方法を選択</MenuItem>
           <MenuItem value={CASH_ON_DELIVERY}>代金引換</MenuItem>
           <MenuItem value={CREDIT_CARD}>クレジットカード決済</MenuItem>
@@ -341,9 +343,9 @@ const Order = () => {
     </Box>
     {creditInput}
     <Box mt={3}>
-      {/* <div>
+      <div>
         {finalErrorMsg}
-      </div> */}
+      </div>
       <Button variant="contained" style = {{width: 300}} onClick={() => {orderBtn()}} color="secondary">この内容で注文する</Button>
     </Box>
 </Box>
