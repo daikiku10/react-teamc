@@ -22,7 +22,7 @@ const ItemDetail = () => {
       };
   }, []);
 
-  //個数
+  
   const itemsSelector = (state) => state.item.items;
   const user = useSelector(userSelector);
   const cart = useSelector(cartSelector);
@@ -31,6 +31,8 @@ const ItemDetail = () => {
   const itemIdNum = Number(item_id);
   const history = useHistory();
   const handleLink = (path) => history.push(path);
+
+  //個数
   const [buyNum,setNum] = useState(1)
   const handleChangebuyNum = (e) => {
     setNum(e.target.value)
@@ -49,7 +51,7 @@ const ItemDetail = () => {
     if(user){
       dispatch(cartSet(user))
     }
-  },[user])
+  },[])
 
  //トッピング
   const toppingsSelector = (state) => state.topping.toppings;
@@ -96,7 +98,7 @@ const ItemDetail = () => {
       handleLink('/cart-item')
     }
   }
-    //トッピング少なめの数
+    //トッピング少な目の数
   let TopNum1 = 0
   let oddTop = toppings.filter(top =>  top.id % 2 !== 0 )
   TopNum1 = oddTop.length;
@@ -129,11 +131,11 @@ const ItemDetail = () => {
           <form>
           <p style={{ fontWeight:'bold' }}>サイズ </p>
               <label className='radio-inline'>
-                <input type='radio' name='responsibleCompany' value='M' onChange={() => {setSize('M')}} checked={size === 'M'}/>
+                <input type='radio' value='M' onChange={() => {setSize('M')}} checked={size === 'M'}/>
                 <span className='price'>&nbsp;М&nbsp;</span>&nbsp;&nbsp;{item.priceM}円(税抜)
               </label>
               <label className='radio-inline'>
-                <input type='radio' name='responsibleCompany' checked={size === 'L'} onChange={() =>  {setSize('L')}}/>
+                <input type='radio' checked={size === 'L'} onChange={() =>  {setSize('L')}}/>
                 <span className='price'>&nbsp;Ｌ</span>&nbsp;&nbsp;{item.priceL}円(税抜)
               </label><p />
             <span style={{ fontWeight: 'bold' }}>数量：</span>
@@ -148,14 +150,15 @@ const ItemDetail = () => {
             /><p/>
           </form>
         </Grid>
-        <Grid container justify='center' margin='spacing' xs={4} sm={5} >
+      <Grid container justify='center' margin='spacing' xs={4} sm={5} >
+        <Grid item justify='center' xs={4} sm={10} >
           <form>
             <label htmlFor='topping'>
               <p><span style={{ fontWeight: 'bold' }}>トッピング：</span>
               <span style={{ color: 'red', fontWeight: 'bold' }}> ※1ヶにつき　200円、多めは300円（税抜）</span></p>
             </label>
               {allToppings.map((topping, index) => (
-                  <label><input type='checkbox' name='topping' value={topping.id} onChange={handleChangeTopping}/>{topping.name}</label>
+                  <label><input type='checkbox' name='topping' value={topping.id} onChange={() => handleChangeTopping}/>{topping.name}</label>
               ))}
             <h2>ご注文金額合計：{addPrice}　円(税抜)</h2>
             <Button onClick={addCartBtn} variant='contained' color='primary' dark='true'>
@@ -163,6 +166,7 @@ const ItemDetail = () => {
             </Button>
           </form>
         </Grid>
+      </Grid>
     </React.Fragment>
   )
 }
