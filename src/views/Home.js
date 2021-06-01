@@ -11,6 +11,7 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import TextField from "@material-ui/core/TextField";
+
 const useStyles = makeStyles({
   root: {
     maxWidth: 345,
@@ -23,11 +24,6 @@ const useStyles = makeStyles({
     flexWrap: "wrap",
     listStyleType: "none",
     boxSizing: "borderBox",
-    // justifyContent: "center",
-    // padding: "10px 80px",
-    // margin: "20px",
-    // border: "unset",
-    // textAlign: "center",
   },
   card: {
     width: "25%",
@@ -49,12 +45,11 @@ const Home = () => {
   const itemsSelector = (state) => state.item.items;
   const items = useSelector(itemsSelector);
   const [array, setArray] = useState(items);
-  const [sortItem1, setSortItem1] = useState("");
-  const [sortItem2, setSortItem2] = useState("");
   const [mozi, setMozi] = useState("");
   const [resultState, setResultState] = useState(false);
   const [karamozi, setKaramozi] = useState(false);
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(setItem());
     return () => {
@@ -64,6 +59,7 @@ const Home = () => {
   useEffect(() => {
     setArray(items);
   }, [items]);
+
   const searchWord = () => {
     setArray(items);
     let arr = items.filter((item) => {
@@ -84,30 +80,27 @@ const Home = () => {
     setArray(items);
     setKaramozi(false);
   };
-  const handleSortByAscend = () => {
-    const sample1 = [...items]
-    sample1.sort((a, b) => {
+
+  const handleSortByAscend = (compareFunc) => {
+    const ue = [...array];
+    ue.sort((a, b) => {
       return a.priceM - b.priceM;
     });
-    setArray(sample1);
+    setArray(ue);
   };
-  const handleSortByDescend = () => {
-    const sample = [...items]
-    sample.sort((a, b) => {
+
+  const handleSortByDescend = (compareFunc) => {
+    const shita = [...array];
+    shita.sort((a, b) => {
       return b.priceM - a.priceM;
     });
-    setArray(sample);
+    setArray(shita);
   };
-  // const [sort, setSort] = useState("1")
-  // const changeSort = (e) => {
-  //   setSort(e.target.value)
-  // }
-  // const sortReset = () => {
-  //   const modosu =
-  // }
-  // items.sort(function (a, b) {
-  //   return a.value - b.value;
-  // });
+
+  const sortReset = () => {
+    setArray(items);
+  };
+
   return (
     <div>
       {/* <button onClick={handleSortByAscend}>値段が低い順</button>
@@ -127,7 +120,7 @@ const Home = () => {
         <Button
           className={classes.buttonSearch}
           variant="contained"
-          color="secondary"
+          style={{ color: "#fff", backgroundColor: "#CF000D" }}
           onClick={searchWord}
         >
           検索
@@ -136,12 +129,22 @@ const Home = () => {
         <Button
           className={classes.buttonClear}
           variant="contained"
-          color="secondary"
+          style={{ color: "#fff", backgroundColor: "#CF000D" }}
           onClick={clearWord}
         >
           クリア
           <DeleteIcon />
         </Button>
+
+        <select name="sort">
+          <option>標準</option>
+          <option onClick={handleSortByAscend}>値段が低い順</option>
+          <option onClick={handleSortByDescend}>値段が高い順</option>
+        </select>
+
+        <button onClick={sortReset}>標準</button>
+        <button onClick={handleSortByAscend}>値段が低い順</button>
+        <button onClick={handleSortByDescend}>値段が高い順</button>
       </div>
       {resultState && (
         <h2 style={{ textAlign: "center" }}>一致する商品がありません</h2>

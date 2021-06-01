@@ -4,6 +4,9 @@ import {useHistory} from "react-router-dom"
 import { CART_STATUS_UNPAID, CART_STATUS_PAID,CASH_ON_DELIVERY,CREDIT_CARD} from '../actions/status'
 import { useSelector, useDispatch } from "react-redux";
 import { cartReset, order,newUserInfo,updateUserInfo } from '../actions/index'
+import emailjs from 'emailjs-com'
+import{ init } from 'emailjs-com';
+init("user_59w9f3gnlbT603nFuspj0");
 
 const userSelector = (state) => state.user.user;
 const cartSelector = state => state.cart.cart
@@ -16,6 +19,7 @@ const Order = () => {
   const user = useSelector(userSelector);
   const userInfo = useSelector(userInfoSelector)
   const userId = user.uid
+  console.log(cart.itemInfo)
   
   // 名前入力、名前エラー
   const [name,setName] = useState("")
@@ -175,6 +179,15 @@ const Order = () => {
     setTel(userInfo.tel)
     SetCredit(userInfo.creditcardNo)
   }
+
+const emailSend = (emailObj) => {
+  emailjs.send('aedsp', 'template_0egn3ud', emailObj,'user_59w9f3gnlbT603nFuspj0').then((result) => {
+          console.log(result.text);
+      }, (error) => {
+          console.log(error.text);
+      });
+}
+
   const orderBtn = () => {
     const userId = user.uid
     const orderInfo = {
@@ -203,6 +216,16 @@ const Order = () => {
       tel: tel,
       creditcardNo: credit
     }
+    const emailObj = {
+      from_name : "らくらくカレー",
+      to_name: name,
+      to_email: email,
+      to_zipcode:zipcode,
+      to_address: address,
+      to_tel: tel,
+      orderTime:orderTime,
+      specifyTime:specifyTime
+    }
     // 「代金引換」を選択して、バリデーションに引っかからなかった場合
     if(pay ===  CASH_ON_DELIVERY && nameError === '' && emailError === '' && zipcodeError === '' && addressError === '' && telError === '' && timeError === '' && payError === ''){
       orderInfo.status = CART_STATUS_UNPAID
@@ -213,7 +236,9 @@ const Order = () => {
         userInfoData.id = userInfo.id
         dispatch(updateUserInfo(user,userInfoData))
       }
-
+      console.log("email")
+      emailSend(emailObj)
+      console.log("emailaaaaaaaaa")
       dispatch(order(user, orderInfo))
       handleLink('/order-complete')
       
@@ -228,6 +253,7 @@ const Order = () => {
             userInfoData.id = userInfo.id
             dispatch(updateUserInfo(user,userInfoData))
           }
+          emailSend(emailObj)
           dispatch(order(user, orderInfo))
           handleLink('/order-complete')
       // バリデーションに一つでも引っかかった場合
