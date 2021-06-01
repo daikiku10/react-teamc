@@ -197,25 +197,23 @@ const CartItem = () => {
         </TableContainer>
       </Container>
       <Box mt={3} textAlign="center">
-        {cart? 
-        <Button variant="contained" style = {{width: 300}} color="secondary" onClick={() => {showOrderComponent()}}>{show? "閉じる" : "注文に進む"}</Button>
-        : <Button variant="contained" style = {{width: 300}} color="secondary" onClick={() => {handleLink("/")}}>商品一覧に戻る</Button>}
+        {cart ?
+        <>
+          {cart.itemInfo.length===0? 
+            <Button variant="contained" style = {{width: 300}} color="secondary" onClick={() => {handleLink("/")}}>商品一覧に戻る</Button>
+            :
+            <>
+            <Button variant="contained" style = {{width: 300}} color="secondary" onClick={() => {showOrderComponent()}}>{show? "閉じる" : "注文に進む"}</Button>
+            {show? <Order/> : <></>}
+            </>
+          }
+        </>
+        : 
+          <Button variant="contained" style = {{width: 300}} color="secondary" onClick={() => {handleLink("/")}}>商品一覧に戻る</Button>
+        }
         </Box>
-        {show? <Order/> : <></>}
-  </>
-)
+    </>
+  )
 }
 
 export default CartItem
-
-// <Box mt={3} textAlign="center">
-// {cart? 
-// <Button variant="contained" style = {{width: 300}} color="secondary" onClick={() => {showOrderComponent()}}>{show? "閉じる" : "注文に進む"}</Button>
-// : <Button variant="contained" style = {{width: 300}} color="secondary" onClick={() => {handleLink("/")}}>商品一覧に戻る</Button>}
-// </Box>
-// <>
-// {show? <Order/> : <></>}
-// </>
-// </>
-// )
-// }
