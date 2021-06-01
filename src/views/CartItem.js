@@ -143,11 +143,11 @@ const CartItem = () => {
               {cart !== "" ? (
                 <TableBody>
                 {cart.itemInfo.map((data, index) => (
-                      <StyledTableRow>
+                      <StyledTableRow key={data.id}>
                         {items.filter((item) => {
                           return data.itemId === item.id
                         }).map((item) => (
-                          <>
+                          <React.Fragment key={data.orderId}>
                             <StyledTableCell component="th" scope="row">
                               <Typography><img src={item.imagePath} width="200" height="200"></img></Typography>
                               <Typography align="center">{item.name}</Typography>
@@ -157,20 +157,20 @@ const CartItem = () => {
                             </StyledTableCell>
                             <StyledTableCell align="center">
                               {data.toppings.map((topping) => (
-                                <List key={data.id}>
+                                <List key={index}>
                                   {toppings.filter((top) => {
                                     return topping.id === top.id
                                   }).map((to) => (
-                                      <ListItemText>{to.name} : {to.price}円</ListItemText>
+                                      <ListItemText key={to.id}>{to.name} : {to.price}円</ListItemText>
                                   ))}
                                 </List>
                               ))}
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              {data.size==="M"? (item.priceM * data.buyNum) : item.priceL * data.buyNum}
+                              {data.size==="M"? (item.priceM * data.buyNum ) : item.priceL * data.buyNum}
                             </StyledTableCell>
                             <StyledTableCell align="center"><Button onClick={() => deleteCartBtn(index)}>削除</Button></StyledTableCell>
-                          </>
+                          </React.Fragment>
                         ))
                       }
                       </StyledTableRow>
@@ -183,8 +183,16 @@ const CartItem = () => {
               }  
             
           </Table>
-          <Typography>消費税：{Math.floor((price + toppingPrice) * 0.1 / 1.1)}円</Typography>
-          <Typography>合計金額：{price + toppingPrice}円</Typography>
+          {cart !== "" ? 
+          <>
+            {cart.itemInfo.length == 0 ? <Typography>カート商品がありません！</Typography> :
+            <>
+              <Typography>消費税：{Math.floor((price + toppingPrice) * 0.1 / 1.1)}円</Typography>
+              <Typography>合計金額：{price + toppingPrice}円</Typography>
+            </>
+            }
+          </>:<></>
+          }
         </TableContainer>
       </Container>
       <Box mt={3} textAlign="center">
