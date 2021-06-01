@@ -111,10 +111,12 @@ const Order = () => {
   }
   const [inputHour, setHour] = useState("")
   const changeHour = (e) => {
-    setHour(Number(e.target.value))
+    setHour(e.target.value)
   }
   const specifyDate =  Number(String(inputYear) + String(inputMonth)  + String(inputDate))
   const specifyTime = inputYear + "-" + inputMonth + "-" + inputDate + "-"  + inputHour + ":" + "00"
+  console.log(specifyDate)
+  console.log(orderDate)
   if(inputHour === ''){
     timeError = <>配達希望日時を入力</>
   }else if(orderDate - specifyDate > 0){
@@ -302,15 +304,15 @@ const Order = () => {
          value={inputDate}
          onChange={changeDate}
          >
-          <MenuItem value="01">01日</MenuItem>
-          <MenuItem value="02">02日</MenuItem>
-          <MenuItem value="03">03日</MenuItem>
-          <MenuItem value="04">04日</MenuItem>
-          <MenuItem value="05">05日</MenuItem>
-          <MenuItem value="06">06日</MenuItem>
-          <MenuItem value="07">07日</MenuItem>
-          <MenuItem value="08">08日</MenuItem>
-          <MenuItem value="09">09日</MenuItem>
+          <MenuItem value="1">01日</MenuItem>
+          <MenuItem value="2">02日</MenuItem>
+          <MenuItem value="3">03日</MenuItem>
+          <MenuItem value="4">04日</MenuItem>
+          <MenuItem value="5">05日</MenuItem>
+          <MenuItem value="6">06日</MenuItem>
+          <MenuItem value="7">07日</MenuItem>
+          <MenuItem value="8">08日</MenuItem>
+          <MenuItem value="9">09日</MenuItem>
           <MenuItem value="10">10日</MenuItem>
           <MenuItem value="11">11日</MenuItem>
           <MenuItem value="12">12日</MenuItem>

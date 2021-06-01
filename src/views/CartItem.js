@@ -41,6 +41,7 @@ const CartItem = () => {
   const items = useSelector(itemsSelector)
   const toppings = useSelector(toppingsSelector)
   const cart = useSelector(cartSelector)
+  console.log(cart)
   const orders = useSelector(ordersSelector)
   const classes = useStyles();
   const dispatch = useDispatch();
