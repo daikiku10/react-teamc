@@ -25,7 +25,6 @@ const useStyles = makeStyles({
 });
 
 const ItemDetail = () => {
-  //console.log('詳細コンポーネント呼び出し')
   const classes = useStyles();
 
   const dispatch = useDispatch();
@@ -73,7 +72,6 @@ const ItemDetail = () => {
   const [toppings, setToppings] = useState([])
   const handleChangeTopping = (e) => {
     if (e.target.checked) {
-      console.log(e.target.value)
       let selectTopping = [...toppings, {id: Number(e.target.value)}]
       setToppings(selectTopping)
 
@@ -177,7 +175,7 @@ const ItemDetail = () => {
             /><p />
             <h2>ご注文金額合計：{addPrice.toLocaleString()}　円(税込み)</h2>
 
-            <Button onClick={addCartBtn} variant='contained' color='secondary' dark='true'>
+            <Button onClick={addCartBtn} variant='contained' style={{ color: "#fff", backgroundColor: "#CF000D" }}>
             カートに入れる
             </Button>
           </form>
