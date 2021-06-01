@@ -11,12 +11,10 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import TextField from "@material-ui/core/TextField";
-// import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles({
   root: {
     maxWidth: 345,
-    // fontSize: 100,
   },
   media: {
     height: 220,
@@ -26,11 +24,6 @@ const useStyles = makeStyles({
     flexWrap: "wrap",
     listStyleType: "none",
     boxSizing: "borderBox",
-    // justifyContent: "center",
-    // padding: "10px 80px",
-    // margin: "20px",
-    // border: "unset",
-    // textAlign: "center",
   },
   card: {
     width: "25%",
@@ -53,22 +46,21 @@ const Home = () => {
 
   const itemsSelector = (state) => state.item.items;
   const items = useSelector(itemsSelector);
-
+  const [array, setArray] = useState(items);
+  const [mozi, setMozi] = useState("");
+  const [resultState, setResultState] = useState(false);
+  const [karamozi, setKaramozi] = useState(false);
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(setItem());
     return () => {
       dispatch(deleteItem());
     };
-  }, []);
+  }, [dispatch]);
   useEffect(() => {
     setArray(items);
   }, [items]);
-
-  const [array, setArray] = useState(items);
-  const [mozi, setMozi] = useState("");
-  const [resultState, setResultState] = useState(false);
-  const [karamozi, setKaramozi] = useState(false);
 
   const searchWord = () => {
     setArray(items);
@@ -91,6 +83,27 @@ const Home = () => {
     setArray(items);
     setKaramozi(false);
   };
+
+  const handleSortByAscend = (compareFunc) => {
+    const ue = [...array];
+    ue.sort((a, b) => {
+      return a.priceM - b.priceM;
+    });
+    setArray(ue);
+  };
+
+  const handleSortByDescend = (compareFunc) => {
+    const shita = [...array];
+    shita.sort((a, b) => {
+      return b.priceM - a.priceM;
+    });
+    setArray(shita);
+  };
+
+  const sortReset = () => {
+    setArray(items);
+  };
+
   return (
     <div>
       <div style={{ textAlign: "center" }}>
@@ -107,7 +120,7 @@ const Home = () => {
         <Button
           className={classes.buttonSearch}
           variant="contained"
-          color="secondary"
+          style={{ color: "#fff", backgroundColor: "#CF000D" }}
           onClick={searchWord}
         >
           検索
@@ -116,26 +129,32 @@ const Home = () => {
         <Button
           className={classes.buttonClear}
           variant="contained"
-          color="secondary"
+          style={{ color: "#fff", backgroundColor: "#CF000D" }}
           onClick={clearWord}
         >
           クリア
           <DeleteIcon />
         </Button>
-        {/* </form> */}
-      </div>
 
+        <select name="sort">
+          <option>標準</option>
+          <option onClick={handleSortByAscend}>値段が低い順</option>
+          <option onClick={handleSortByDescend}>値段が高い順</option>
+        </select>
+
+        <button onClick={sortReset}>標準</button>
+        <button onClick={handleSortByAscend}>値段が低い順</button>
+        <button onClick={handleSortByDescend}>値段が高い順</button>
+      </div>
       {resultState && (
         <h2 style={{ textAlign: "center" }}>一致する商品がありません</h2>
       )}
       {karamozi && (
         <h2 style={{ textAlign: "center" }}>検索キーワードが空欄です</h2>
       )}
-
       <ol className={classes.cardList}>
         {array.map((item) => (
           <li key={item.id} className={classes.card}>
-            {/* <Grid item xs={12}> */}
             <Card className={classes.root}>
               <CardActionArea>
                 <CardMedia className={classes.media}>
@@ -148,17 +167,18 @@ const Home = () => {
                   </Link>
                 </CardMedia>
                 <CardContent>
-                  <Link to={`/item-detail/${item.id}`}>{item.name}</Link>
-                  <p
-                  // style={{ fontSize: 20 }}
-                  >
-                    Mサイズ {item.priceM.toLocaleString()}円(税抜き)
+                  <Link to={`/item-detail/${item.id}`} style={{ fontSize: 20 }}>
+                    {item.name}
+                  </Link>
+                  <p style={{ fontSize: 16 }}>
+                    Mサイズ {item.priceM.toLocaleString()}円(税込)
                   </p>
-                  <p>Lサイズ {item.priceL.toLocaleString()}円(税抜き)</p>
+                  <p style={{ fontSize: 16 }}>
+                    Lサイズ {item.priceL.toLocaleString()}円(税込)
+                  </p>
                 </CardContent>
               </CardActionArea>
             </Card>
-            {/* </Grid> */}
           </li>
         ))}
       </ol>
