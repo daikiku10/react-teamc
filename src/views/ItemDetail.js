@@ -1,4 +1,4 @@
-import React, {Component, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useHistory, useParams} from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'
 import { makeStyles } from "@material-ui/core/styles";
@@ -8,17 +8,24 @@ import TextField from '@material-ui/core/TextField';
 import { setItem, deleteItem, setTopping, deleteTopping, newCart, addCart, cartSet } from '../actions/index';
 import { CART_STATUS_IN } from '../actions/status';
 
+const userSelector = state => state.user.user
+const cartSelector = state => state.cart.cart
+const itemsSelector = state => state.item.items;
+const toppingsSelector = state => state.topping.toppings;
+
 const useStyles = makeStyles({
   grid: {
   margin: "50px 0 100px 0",
   },
 
   form: {
-  margin: "20px 0 0 0"
+    margin: "20px 0 0 0",
+    width: "60%"
   }
 });
 
 const ItemDetail = () => {
+  //console.log('詳細コンポーネント呼び出し')
   const classes = useStyles();
 
   const dispatch = useDispatch();
@@ -31,16 +38,22 @@ const ItemDetail = () => {
       };
   }, []);
 
-   const userSelector = state => state.user.user
-   const cartSelector = state => state.cart.cart
-   const itemsSelector = state => state.item.items;
-   const user = useSelector(userSelector);
-   const cart = useSelector(cartSelector);
-   const items = useSelector(itemsSelector);
-   const { item_id } = useParams();
-   const itemIdNum = Number(item_id);
-   const history = useHistory();
-   const handleLink = (path) => history.push(path);
+  const user = useSelector(userSelector);
+  const items = useSelector(itemsSelector);
+  const allToppings = useSelector(toppingsSelector);
+  const cart = useSelector(cartSelector);
+  const { item_id } = useParams();
+  const itemIdNum = Number(item_id);
+  const history = useHistory();
+  const handleLink = (path) => history.push(path);
+
+  //パラメータに一致したitemをreturn内でitemとして使う
+  let item = '';
+  items.forEach((i) => {
+  if (i.id === itemIdNum) {
+    item = i;
+    }
+  })
 
   //個数
   const [buyNum,setNum] = useState(1)
@@ -49,13 +62,6 @@ const ItemDetail = () => {
   }
   const buyNum2 = Number(buyNum)
 
-  //パラメータに一致したitemをreturn内でitemとして使う
-  let item = '';
-  items.forEach((i) => {
-  if (i.id === itemIdNum) {
-    item = i;
-  } })	
-  
   // カートの中身を持ってくる
   useEffect(() => {
     if(user){
@@ -64,12 +70,10 @@ const ItemDetail = () => {
   },[])
 
  //トッピング
-  const toppingsSelector = (state) => state.topping.toppings;
-  const allToppings = useSelector(toppingsSelector);
   const [toppings, setToppings] = useState([])
-
   const handleChangeTopping = (e) => {
     if (e.target.checked) {
+      console.log(e.target.value)
       let selectTopping = [...toppings, {id: Number(e.target.value)}]
       setToppings(selectTopping)
 
@@ -80,7 +84,11 @@ const ItemDetail = () => {
   }
 
   //サイズ
-  const [size,setSize] = useState('M')
+  const [size, setSize] = useState('M')
+  const handleChangeSize = (e) => {
+    setSize(e.target.value)
+  }
+
   const addCartBtn = () => {
     const item = {
       id: new Date().getTime().toString(),
@@ -108,11 +116,11 @@ const ItemDetail = () => {
       handleLink('/cart-item')
     }
   }
-    //トッピング少な目の数
+    //トッピング少な目の数　奇数
   let TopNum1 = 0
   let oddTop = toppings.filter(top =>  top.id % 2 !== 0 )
   TopNum1 = oddTop.length;
-    //トッピング多めの数
+    //トッピング多めの数　偶数
   let TopNum2 = 0
   let evenTop = toppings.filter(top => top.id % 2 === 0 )
   TopNum2 = evenTop.length;
@@ -129,11 +137,11 @@ const ItemDetail = () => {
       <div className={classes.grid}>
         <Grid container justify='center'>
               <Grid item xs={4} sm={5} >
-                <div text-align='center'><img src={`/${item.imagePath}`} style={{ width: 400, height: 300 }}></img></div>
+                <div text-align='center'><img src={`/${item.imagePath}`} alt='画像' style={{ width: 400, height: 300 }}></img></div>
               </Grid>
         <Grid item xs={4} sm={5}>
-          <h2 justify='center'>商品詳細</h2>
-            <h3>{ console.log('レンダリング')}{item.name}</h3> <br />
+          <span style={{ fontsize:'20px' }} justify='center'>商品詳細</span>
+            <h3>{item.name}</h3> <br />
                 <p>{item.description}</p>
               </Grid>
         </Grid>
@@ -141,12 +149,12 @@ const ItemDetail = () => {
           <form className={classes.form}>
             <p style={{ fontWeight:'bold' }}>サイズ </p>
               <label>
-                <input type='radio' value='M' onChange={() => {setSize('M')}} checked={size === 'M'}/>
-                <span className='price'> Ｍ </span>{item.priceM}円(税抜)　　
+                <input type='radio' value='M' onChange={(e) => {handleChangeSize(e)}} checked={size === 'M'}/>
+                <span className='price'> Ｍ </span>{Number(item.priceM).toLocaleString()}円(税抜)　　
               </label>
               <label>
-                <input type='radio' value='L' checked={size === 'L'} onChange={() =>  {setSize('L')}}/>
-                <span className='price'>  Ｌ </span>{item.priceL}円(税抜)
+                <input type='radio' value='L' checked={size === 'L'} onChange={(e) =>  {handleChangeSize(e)}}/>
+                <span className='price'>  Ｌ </span>{Number(item.priceL).toLocaleString()}円(税抜)
               </label><p />
             
             <label htmlFor='topping'>
@@ -154,7 +162,7 @@ const ItemDetail = () => {
               <span style={{ color: 'red', fontWeight: 'bold' }}> ※1ヶにつき200円、多めは300円（税抜）</span></p>
             </label>
               {allToppings.map((topping) => (
-                  <label key={topping.id}><input type='checkbox' name='topping' value={topping.id} onChange={() => handleChangeTopping}/>{topping.name}</label>
+                  <label key={topping.id}><input type='checkbox' name='topping' value={topping.id} onChange={(e) => handleChangeTopping(e)}/>{topping.name}   </label>
               ))}
             <br /><br/>
             
@@ -167,8 +175,8 @@ const ItemDetail = () => {
               InputProps={{ inputProps: { min: 1, max: 10 } }}
               onChange={(e) => { handleChangebuyNum(e) }}
             /><p />
-            
-            <h2>ご注文金額合計：{console.log('確認')}{addPrice}　円(税抜)</h2>
+            <h2>ご注文金額合計：{addPrice.toLocaleString()}　円(税抜)</h2>
+
             <Button onClick={addCartBtn} variant='contained' color='secondary' dark='true'>
             カートに入れる
             </Button>
