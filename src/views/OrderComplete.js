@@ -1,20 +1,15 @@
 import React, {useEffect} from "react";
 import {useHistory, BrowserRouter as Router, Switch, Route, Redirect, Link} from 'react-router-dom';
-import Home from './Home';
-import {useDispatch} from 'react-redux';
-import firebase from 'firebase';
-import {CART_STATUS_UNPAID, CART_STATUS_PAID} from '../actions/status';
+// import Home from './Home';
+// import {useDispatch} from 'react-redux';
+// import firebase from 'firebase';
+// import {CART_STATUS_UNPAID, CART_STATUS_PAID} from '../actions/status';
 import {Container, Button, ListItem,} from '@material-ui/core';
-import List from "@material-ui/core/List";
-import {makeStyles} from "@material-ui/core/styles";
-import Divider from "@material-ui/core/Divider";
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-
-const userSelector = state => state.user.user
-const ordersSelector = state => state.cart.orders
-const itemsSelector = state => state.item.items
-const toppingsSelector = state => state.topping.toppings
+// import List from "@material-ui/core/List";
+// import {makeStyles} from "@material-ui/core/styles";
+// import Divider from "@material-ui/core/Divider";
+// import ListItemText from '@material-ui/core/ListItemText';
+// import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 
 const OrderComplete = () => {
   // const classes = useStyles()
@@ -28,7 +23,7 @@ const OrderComplete = () => {
       <p>この度はご注文ありがとうございます。</p>
       <p>お支払い先は、お送りしたメールに記載してありますのでご確認ください。</p>
       <p>メールが届かない場合は「注文履歴」からご確認ください。</p>
-      <Button variant="outlined" color="secondary" onClick={() => handleLink('/')}>
+      <Button variant="outlined" style={{ color: "#fff", backgroundColor: "#CF000D"}} onClick={() => handleLink('/')}>
       トップ画面に戻る
       </Button>
       {/* <Button variant="outlined" color="secondary">
