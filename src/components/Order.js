@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-import {Button,TextField,InputLabel,Box,MenuItem,Select,FormControl,FormHelperText} from '@material-ui/core';
+import {Button,TextField,InputLabel,Box,MenuItem,Select,FormControl,FormHelperText,FormControlLabel,Checkbox} from '@material-ui/core';
 import {useHistory} from "react-router-dom" 
 import { CART_STATUS_UNPAID, CART_STATUS_PAID,CASH_ON_DELIVERY,CREDIT_CARD} from '../actions/status'
 import { useSelector, useDispatch } from "react-redux";
@@ -178,6 +178,23 @@ const Order = () => {
     setTel(userInfo.tel)
     SetCredit(userInfo.creditcardNo)
   }
+  const changeFetchOrder = (e) => {
+    if(e.target.checked){
+      setName(userInfo.userName)
+      setEmail(userInfo.email)
+      setAddress(userInfo.address)
+      setZipcode(userInfo.zipcode)
+      setTel(userInfo.tel)
+      SetCredit(userInfo.creditcardNo)
+    }else{
+      setName("")
+      setEmail("")
+      setAddress("")
+      setZipcode("")
+      setTel("")
+      SetCredit("")
+    }
+  }
 
 const emailSend = (emailObj) => {
   emailjs.send('aedsp', 'template_0egn3ud', emailObj,'user_59w9f3gnlbT603nFuspj0').then(() => {
@@ -261,7 +278,12 @@ const emailSend = (emailObj) => {
   return(
     <Box align="center">
       <h2>お届先情報</h2>
-      {userInfo? <button onClick={() => {fetchUserInfo()}}>登録情報の呼び出し</button>: <></>}
+      {userInfo? 
+      <>
+        <label><input type='checkbox' name='topping' onChange={(e) => changeFetchOrder(e)}/>前回の登録情報を入力</label>
+      </>
+      : 
+      <></>}
       <Box>
         <TextField label="お名前"  type="text" value={name}  style = {{width: 400}} onChange={changeName} helperText={nameError} color="secondary"/>
       </Box>
