@@ -19,7 +19,6 @@ const Order = () => {
   const user = useSelector(userSelector);
   const userInfo = useSelector(userInfoSelector)
   const userId = user.uid
-  console.log(cart.itemInfo)
   
   // 名前入力、名前エラー
   const [name,setName] = useState("")
@@ -181,11 +180,9 @@ const Order = () => {
   }
 
 const emailSend = (emailObj) => {
-  emailjs.send('aedsp', 'template_0egn3ud', emailObj,'user_59w9f3gnlbT603nFuspj0').then((result) => {
-          console.log(result.text);
-      }, (error) => {
-          console.log(error.text);
-      });
+  emailjs.send('aedsp', 'template_0egn3ud', emailObj,'user_59w9f3gnlbT603nFuspj0').then(() => {
+    console.log("メール送信！")
+  });
 }
 
   const orderBtn = () => {
@@ -217,7 +214,6 @@ const emailSend = (emailObj) => {
       creditcardNo: credit
     }
     const emailObj = {
-      from_name : "らくらくカレー",
       to_name: name,
       to_email: email,
       to_zipcode:zipcode,
@@ -400,7 +396,7 @@ const emailSend = (emailObj) => {
       <div>
         {finalErrorMsg}
       </div>
-      <Button variant="contained" style = {{width: 300}} onClick={() => {orderBtn()}} color="secondary">この内容で注文する</Button>
+      <Button variant="contained" style = {{width: 300}} onClick={() => {orderBtn()}} style={{ color: "#fff", backgroundColor: "#CF000D" }}>この内容で注文する</Button>
     </Box>
 </Box>
 )
