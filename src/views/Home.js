@@ -11,12 +11,9 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import TextField from "@material-ui/core/TextField";
-// import Grid from "@material-ui/core/Grid";
-
 const useStyles = makeStyles({
   root: {
     maxWidth: 345,
-    // fontSize: 100,
   },
   media: {
     height: 220,
@@ -47,29 +44,26 @@ const useStyles = makeStyles({
     margin: "45px 5px 0 0",
   },
 });
-
 const Home = () => {
   const classes = useStyles();
-
   const itemsSelector = (state) => state.item.items;
   const items = useSelector(itemsSelector);
-
+  const [array, setArray] = useState(items);
+  const [sortItem1, setSortItem1] = useState("");
+  const [sortItem2, setSortItem2] = useState("");
+  const [mozi, setMozi] = useState("");
+  const [resultState, setResultState] = useState(false);
+  const [karamozi, setKaramozi] = useState(false);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(setItem());
     return () => {
       dispatch(deleteItem());
     };
-  }, []);
+  }, [dispatch]);
   useEffect(() => {
     setArray(items);
   }, [items]);
-
-  const [array, setArray] = useState(items);
-  const [mozi, setMozi] = useState("");
-  const [resultState, setResultState] = useState(false);
-  const [karamozi, setKaramozi] = useState(false);
-
   const searchWord = () => {
     setArray(items);
     let arr = items.filter((item) => {
@@ -84,15 +78,41 @@ const Home = () => {
       setArray(items);
     }
   };
-
   const clearWord = () => {
     setMozi("");
     setResultState(false);
     setArray(items);
     setKaramozi(false);
   };
+  const handleSortByAscend = () => {
+    const sample1 = [...items]
+    sample1.sort((a, b) => {
+      return a.priceM - b.priceM;
+    });
+    setArray(sample1);
+  };
+  const handleSortByDescend = () => {
+    const sample = [...items]
+    sample.sort((a, b) => {
+      return b.priceM - a.priceM;
+    });
+    setArray(sample);
+  };
+  // const [sort, setSort] = useState("1")
+  // const changeSort = (e) => {
+  //   setSort(e.target.value)
+  // }
+  // const sortReset = () => {
+  //   const modosu =
+  // }
+  // items.sort(function (a, b) {
+  //   return a.value - b.value;
+  // });
   return (
     <div>
+      {/* <button onClick={handleSortByAscend}>値段が低い順</button>
+      <button onClick={handleSortByDescend}>値段が高い順</button> */}
+      {/*  <button onClick={sortReset}>標準</button> */}
       <div style={{ textAlign: "center" }}>
         <TextField
           className={classes.input}
@@ -122,20 +142,16 @@ const Home = () => {
           クリア
           <DeleteIcon />
         </Button>
-        {/* </form> */}
       </div>
-
       {resultState && (
         <h2 style={{ textAlign: "center" }}>一致する商品がありません</h2>
       )}
       {karamozi && (
         <h2 style={{ textAlign: "center" }}>検索キーワードが空欄です</h2>
       )}
-
       <ol className={classes.cardList}>
         {array.map((item) => (
           <li key={item.id} className={classes.card}>
-            {/* <Grid item xs={12}> */}
             <Card className={classes.root}>
               <CardActionArea>
                 <CardMedia className={classes.media}>
@@ -148,22 +164,22 @@ const Home = () => {
                   </Link>
                 </CardMedia>
                 <CardContent>
-                  <Link to={`/item-detail/${item.id}`}>{item.name}</Link>
-                  <p
-                  // style={{ fontSize: 20 }}
-                  >
-                    Mサイズ {item.priceM.toLocaleString()}円(税抜き)
+                  <Link to={`/item-detail/${item.id}`} style={{ fontSize: 20 }}>
+                    {item.name}
+                  </Link>
+                  <p style={{ fontSize: 16 }}>
+                    Mサイズ {item.priceM.toLocaleString()}円(税込)
                   </p>
-                  <p>Lサイズ {item.priceL.toLocaleString()}円(税抜き)</p>
+                  <p style={{ fontSize: 16 }}>
+                    Lサイズ {item.priceL.toLocaleString()}円(税込)
+                  </p>
                 </CardContent>
               </CardActionArea>
             </Card>
-            {/* </Grid> */}
           </li>
         ))}
       </ol>
     </div>
   );
 };
-
 export default Home;

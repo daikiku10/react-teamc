@@ -41,7 +41,6 @@ const CartItem = () => {
   const items = useSelector(itemsSelector)
   const toppings = useSelector(toppingsSelector)
   const cart = useSelector(cartSelector)
-  console.log(cart)
   const orders = useSelector(ordersSelector)
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -126,7 +125,7 @@ const CartItem = () => {
   return (
     <>
       <Container maxWidth="md">
-        <Typography variant="h6" color="inherit" noWrap>
+        <Typography variant="h6" noWrap>
           ショッピングカート
         </Typography>
         <TableContainer component={Paper}>
