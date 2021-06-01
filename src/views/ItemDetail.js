@@ -15,7 +15,8 @@ const toppingsSelector = state => state.topping.toppings;
 
 const useStyles = makeStyles({
   grid: {
-  margin: "50px 0 100px 0",
+    margin: "50px 50px 100px 50px",
+    width: "200"
   },
 
   form: {
@@ -144,7 +145,7 @@ const ItemDetail = () => {
               </Grid>
         </Grid>
         <Grid container justify='center'>
-          <form className={classes.form}>
+          <div className={classes.form}>
             <p style={{ fontWeight:'bold' }}>サイズ </p>
               <label>
                 <input type='radio' value='M' onChange={(e) => {handleChangeSize(e)}} checked={size === 'M'}/>
@@ -178,7 +179,7 @@ const ItemDetail = () => {
             <Button onClick={addCartBtn} variant='contained' style={{ color: "#fff", backgroundColor: "#CF000D" }}>
             カートに入れる
             </Button>
-          </form>
+          </div>
         </Grid>
       </div>
     </React.Fragment>
