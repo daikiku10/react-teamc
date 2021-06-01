@@ -150,16 +150,16 @@ const ItemDetail = () => {
             <p style={{ fontWeight:'bold' }}>サイズ </p>
               <label>
                 <input type='radio' value='M' onChange={(e) => {handleChangeSize(e)}} checked={size === 'M'}/>
-                <span className='price'> Ｍ </span>{Number(item.priceM).toLocaleString()}円(税抜)　　
+                <span className='price'> Ｍ </span>{Number(item.priceM).toLocaleString()}円(税込み)　　
               </label>
               <label>
                 <input type='radio' value='L' checked={size === 'L'} onChange={(e) =>  {handleChangeSize(e)}}/>
-                <span className='price'>  Ｌ </span>{Number(item.priceL).toLocaleString()}円(税抜)
+                <span className='price'>  Ｌ </span>{Number(item.priceL).toLocaleString()}円(税込み)
               </label><p />
             
             <label htmlFor='topping'>
               <p><span style={{ fontWeight: 'bold' }}>トッピング：</span>
-              <span style={{ color: 'red', fontWeight: 'bold' }}> ※1ヶにつき200円、多めは300円（税抜）</span></p>
+              <span style={{ color: 'red', fontWeight: 'bold' }}> ※1ヶにつき200円、多めは300円（税込み）</span></p>
             </label>
               {allToppings.map((topping) => (
                   <label key={topping.id}><input type='checkbox' name='topping' value={topping.id} onChange={(e) => handleChangeTopping(e)}/>{topping.name}   </label>
@@ -175,7 +175,7 @@ const ItemDetail = () => {
               InputProps={{ inputProps: { min: 1, max: 10 } }}
               onChange={(e) => { handleChangebuyNum(e) }}
             /><p />
-            <h2>ご注文金額合計：{addPrice.toLocaleString()}　円(税抜)</h2>
+            <h2>ご注文金額合計：{addPrice.toLocaleString()}　円(税込み)</h2>
 
             <Button onClick={addCartBtn} variant='contained' color='secondary' dark='true'>
             カートに入れる
