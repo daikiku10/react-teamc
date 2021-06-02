@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-import {Button,TextField,InputLabel,Box,MenuItem,Select,FormControl,FormHelperText,FormControlLabel,Checkbox} from '@material-ui/core';
+import {Button,TextField,InputLabel,Box,MenuItem,Select,FormControl,FormHelperText} from '@material-ui/core';
 import {useHistory} from "react-router-dom" 
 import { CART_STATUS_UNPAID, CART_STATUS_PAID,CASH_ON_DELIVERY,CREDIT_CARD} from '../actions/status'
 import { useSelector, useDispatch } from "react-redux";
@@ -11,16 +11,17 @@ init("user_59w9f3gnlbT603nFuspj0");
 const userSelector = (state) => state.user.user;
 const cartSelector = state => state.cart.cart
 const userInfoSelector = state => state.cart.userInfo
+
 const Order = () => {
-  const history = useHistory()
-  const dispatch = useDispatch()
-  const handleLink = path => history.push(path)
-  const cart = useSelector(cartSelector);
-  const user = useSelector(userSelector);
-  const userInfo = useSelector(userInfoSelector)
-  const userId = user.uid
+
+const history = useHistory()
+const handleLink = path => history.push(path)
+const dispatch = useDispatch()
+const cart = useSelector(cartSelector);
+const user = useSelector(userSelector);
+const userInfo = useSelector(userInfoSelector)
   
-  // 名前入力、名前エラー
+  // 名前エラー
   const [name,setName] = useState("")
   const changeName = (e) => {
     setName(e.target.value)
@@ -31,7 +32,7 @@ const Order = () => {
   }else{
     nameError = ''
   }
-  // メール入力、メールエラー
+  // メールエラー
   const [email,setEmail] = useState("")
   const changeEmail = (e) => {
     setEmail(e.target.value)
@@ -44,7 +45,7 @@ const Order = () => {
   }else{
     emailError = <p>メールアドレスの形式が不正です</p>
   }
-  // 郵便番号入力、郵便番号エラー
+  // 郵便番号サジェスト
   const [zipcode, setZipcode] = useState("")
   const [address,setAddress] = useState("")
   useEffect(() => {
@@ -60,7 +61,7 @@ const Order = () => {
         });
     }
   }, [zipcode]);
-
+// 郵便番号エラー
   let zipcodeError;
   if(zipcode === ''){
     zipcodeError = <>郵便番号を入力して下さい</>
@@ -69,7 +70,7 @@ const Order = () => {
   }else{
     zipcodeError = <>郵便番号はXXX-XXXXの形式で入力してください</>
   }
-  // 住所入力、住所エラー
+  // 住所エラー
   let addressError;
   if(address === ''){
     addressError = <>住所を入力して下さい</>
@@ -90,7 +91,6 @@ const Order = () => {
     telError = <>電話番号はXXX-XXXX-XXXXの形式で入力してください</>
   }
   // 配達日時入力、配達日時エラー
-  
   let timeError;
   const today = new Date();
   const year = today.getFullYear()
@@ -131,7 +131,7 @@ const Order = () => {
   }else{
     timeError = ''
   }
-  // 支払い方法入力、支払い方法エラー
+  // 支払い方法エラー
   const [pay,setPay] = useState("")
   const changePay = e => {
     setPay(e.target.value)
@@ -142,7 +142,7 @@ const Order = () => {
   }else{
     payError = ''
   }
-  // クレジット入力画面、入力値取得、クレジットエラー
+  // クレジットエラー
   const [credit, SetCredit] = useState("")
   const changeCredit = e => {
     SetCredit(e.target.value)
@@ -155,6 +155,7 @@ const Order = () => {
    }else{
      creditError = <>クレジット番号はXXXX-XXXX-XXXX-XXXXの形式で入力してください</>
    }
+  //  クレジット番号入力タグ
    let creditInput;
    if(pay === CREDIT_CARD){
    creditInput =
@@ -164,20 +165,14 @@ const Order = () => {
      </Box>
    </>
   }
-  // 注文ボタン押下
+
   let finalErrorMsg
   const [finalError, setFinalError] = useState(false)
   if(finalError){
     finalErrorMsg = <>※入力に誤りのある箇所を修正してください</>
   }
-  const fetchUserInfo = () => {
-    setName(userInfo.userName)
-    setEmail(userInfo.email)
-    setAddress(userInfo.address)
-    setZipcode(userInfo.zipcode)
-    setTel(userInfo.tel)
-    SetCredit(userInfo.creditcardNo)
-  }
+
+  // ユーザー情報の呼び出し
   const changeFetchOrder = (e) => {
     if(e.target.checked){
       setName(userInfo.userName)
@@ -195,18 +190,16 @@ const Order = () => {
       SetCredit("")
     }
   }
-
-const emailSend = (emailObj) => {
-  emailjs.send('aedsp', 'template_0egn3ud', emailObj,'user_59w9f3gnlbT603nFuspj0').then(() => {
-    console.log("メール送信！")
-  });
-}
-
+// 注文完了メール送信
+  const emailSend = (emailObj) => {
+    emailjs.send('aedsp', 'template_0egn3ud', emailObj,'user_59w9f3gnlbT603nFuspj0').then(() => {
+      console.log("メール送信！")
+    });
+  }
+  // 注文実行ボタン
   const orderBtn = () => {
     const userId = user.uid
     const orderInfo = {
-      // userId:userId,
-      //ログイン中のユーザーID
       orderId: cart.orderId,
       id: cart.id, 
       //カートが持っているorderId
@@ -249,14 +242,10 @@ const emailSend = (emailObj) => {
         userInfoData.id = userInfo.id
         dispatch(updateUserInfo(user,userInfoData))
       }
-      console.log("email")
       emailSend(emailObj)
-      console.log("emailaaaaaaaaa")
       dispatch(order(user, orderInfo))
       handleLink('/order-complete')
-      
-      
-      // 「クレジット」を選択してバリデーションに引っかからなかった場合
+    // 「クレジット」を選択してバリデーションに引っかからなかった場合
     }else if(pay === CREDIT_CARD && nameError === '' && emailError === '' && zipcodeError === '' && addressError === '' && telError === '' && timeError === '' && payError === '' && creditError === ''){
       orderInfo.status = CART_STATUS_PAID
           //action createrへの処理
@@ -290,7 +279,6 @@ const emailSend = (emailObj) => {
       <Box mt={1}>
         <TextField id="email" value={email} type="email" label="メールアドレス" style = {{width: 400}} onChange={changeEmail} helperText={emailError} color="secondary"/>
       </Box>
-
       <Box mt={1}>
         <TextField id="zipcode" label="郵便番号" style = {{width: 400}} value={zipcode} onChange={(e) => {
             setZipcode(e.target.value);
@@ -304,7 +292,6 @@ const emailSend = (emailObj) => {
       <Box mt={1}>
         <TextField id="tel" label="電話番号" style = {{width: 400}} helperText={telError} value={tel} onChange={changeTel}/>
       </Box>
-
       <Box mt={2}>
       <FormControl>
         <InputLabel>年</InputLabel>
