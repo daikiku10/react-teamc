@@ -14,22 +14,28 @@ export const logoutUser = () => ({
 export const SETITEM = 'setItem'
 export const setItem = () => dispatch => {
   firebase.firestore().collection('items').get().then( snapshot => {
+    let items = []
     snapshot.forEach( item => {
-      return dispatch({
-        type:SETITEM,
-        item:item.data()
-      })
+      let itemData = item.data()
+      items.push(itemData)
+    })
+    return dispatch({
+      type:SETITEM,
+      items:items
     })
   })
 }
 export const SETTOPPING = 'setTopping'
 export const setTopping = () => dispatch => {
   firebase.firestore().collection('toppings').get().then( snapshot => {
+    let toppings = []
     snapshot.forEach( topping => {
-      return dispatch ({
-        type:SETTOPPING,
-        topping:topping.data()
-      })
+      let toppingData = topping.data()
+      toppings.push(toppingData)
+    })
+    return dispatch ({
+      type:SETTOPPING,
+      toppings:toppings
     })
   })
 }

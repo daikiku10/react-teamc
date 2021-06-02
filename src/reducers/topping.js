@@ -7,7 +7,7 @@ const initialState = {
 export default (state = initialState, action) => {
   switch(action.type){
     case SETTOPPING:
-      return {toppings:[...state.toppings, action.topping]}
+      return {toppings:action.toppings}
     case DELETETOPPING:
       return {toppings: []}
     default:

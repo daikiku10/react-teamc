@@ -7,7 +7,7 @@ const initialState = {
 export default (state = initialState, action) => {
   switch(action.type){
     case SETITEM:
-      return {items: [...state.items, action.item]}
+      return {items: action.items}
     case DELETEITEM:
       return {items: []}
     default:
