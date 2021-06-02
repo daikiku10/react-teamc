@@ -149,17 +149,17 @@ const ItemDetail = () => {
             <p style={{ fontWeight:'bold' }}>サイズ </p>
               <label>
                 <input type='radio' value='M' onChange={(e) => {handleChangeSize(e)}} checked={size === 'M'}/>
-                <span className='price'> Ｍ </span>{Number(item.priceM).toLocaleString()}円(税込み)　　
+                <span className='price'> Ｍ </span>{Number(item.priceM).toLocaleString()}円(税込)　　
               </label>
               <label>
                 <input type='radio' value='L' checked={size === 'L'} onChange={(e) =>  {handleChangeSize(e)}}/>
-                <span className='price'>  Ｌ </span>{Number(item.priceL).toLocaleString()}円(税込み)
+                <span className='price'>  Ｌ </span>{Number(item.priceL).toLocaleString()}円(税込)
               </label><p />
           </div>
           <div className={classes.form}>
             <label htmlFor='topping'>
               <p><span style={{ fontWeight: 'bold' }}>トッピング：</span>
-              <span style={{ color: 'red', fontWeight: 'bold' }}> ※1ヶにつき200円、多めは300円（税込み）</span></p>
+              <span style={{ color: 'red', fontWeight: 'bold' }}> ※1ヶにつき200円、多めは300円（税込）</span></p>
             </label>
               {allToppings.map((topping) => (
                   <label key={topping.id}><input type='checkbox' name='topping' value={topping.id} onChange={(e) => handleChangeTopping(e)}/>{topping.name}   </label>
@@ -178,7 +178,7 @@ const ItemDetail = () => {
             /><p />
           </div>
           <Box textAlign="center" className={classes.form}>
-            <h2>ご注文金額合計：{addPrice.toLocaleString()}　円(税込み)</h2>
+            <h2>ご注文金額合計：{addPrice.toLocaleString()}　円(税込)</h2>
 
             <Button onClick={addCartBtn} variant='contained' style={{ color: "#fff", backgroundColor: "#CF000D" }}>
             カートに入れる
