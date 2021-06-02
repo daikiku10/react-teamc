@@ -125,13 +125,15 @@ const CartItem = () => {
   return (
     <>
       <Container maxWidth="md">
-        <Typography variant="h4" color="inherit" noWrap>
-          ショッピングカート
-        </Typography>
+        <Box mt={3} mb={3}>
+          <Typography variant="h4" color="inherit" noWrap align="center">
+            ショッピングカート
+          </Typography>
+        </Box>
         <TableContainer component={Paper}>
           <Table className={classes.table} aria-label="customized table">
-            <TableHead>
-              <TableRow>
+            <TableHead >
+              <TableRow >
                 <StyledTableCell align="center">商品名</StyledTableCell>
                 <StyledTableCell align="center">サイズ、価格、数量</StyledTableCell>
                 <StyledTableCell align="center">トッピング価格</StyledTableCell>
@@ -150,7 +152,7 @@ const CartItem = () => {
                           <React.Fragment key={index}>
                             <StyledTableCell component="th" scope="row">
                               <Typography><img src={item.imagePath} width="200" height="200" style={{objectFit: "cover"}}></img></Typography>
-                              <Typography align="center"><p>{item.name}</p></Typography>
+                              <Typography align="center">{item.name}</Typography>
                             </StyledTableCell> 
                             <StyledTableCell align="center">
                               { data.size === "M" ? <Typography>{item.priceM}円、{data.buyNum}杯</Typography> : <Typography>{item.priceL}円、{data.buyNum}杯</Typography> }
@@ -202,8 +204,11 @@ const CartItem = () => {
           <>
             {cart.itemInfo.length == 0 ? <Typography>カート商品がありません！</Typography> :
             <>
+            <Box mt={2} mb={2}>
               <Typography variant="h5" align="center">消費税：{Math.floor((price + toppingPrice) * 0.1 / 1.1)}円</Typography>
               <Typography variant="h5" align="center">合計金額：{price + toppingPrice}円</Typography>
+            </Box>
+
             </>
             }
           </>:<></>

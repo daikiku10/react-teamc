@@ -135,7 +135,7 @@ const ItemDetail = () => {
     <React.Fragment>
       <div className={classes.grid}>
         <Grid container justify='center'>
-              <Box item xs={4} sm={5} textAlign="center">
+              <Box xs={4} sm={5} textAlign="center">
                 <img src={`/${item.imagePath}`} alt='画像'  style={{ width: 400, height: 300 }} ></img>
               </Box>
         <Grid item xs={4} sm={5}>

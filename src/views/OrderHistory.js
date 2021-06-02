@@ -73,7 +73,7 @@ const OrderHistory = () => {
   const orders1 = orders.length
   return (
     <React.Fragment>
-      <h1>注文履歴</h1>
+      <h1 align="center">注文履歴</h1>
       { orders1 > 0 ? (
         <section className="c-section-wrapin">
           {orders.filter((order) => {
@@ -90,7 +90,7 @@ const OrderHistory = () => {
                 }).map((item) => (
                   <ListItem className={classes.list} key={index}>
                     <ListItemAvatar>
-                      <img src={`/${item.imagePath}`} width="200" height="200"></img>
+                      <img src={`/${item.imagePath}`} width="200" height="200" style={{objectFit: "cover"}}></img>
                     </ListItemAvatar>
                     <div className={classes.text} />
                     <div className={classes.text}>
@@ -104,7 +104,7 @@ const OrderHistory = () => {
                             }).map((to) => (
                               <div key={ind}>
                                 <ListItemText 
-                                  secondary={to.name + "：" + to.price + "円"}></ListItemText>
+                                  secondary={to.name + ' ' +"単価" +  "：" + to.price + "円"}></ListItemText>
                               </div>
                             ))}
                         </div>
@@ -136,7 +136,7 @@ const OrderHistory = () => {
                 }).map((item) => (
                   <ListItem className={classes.list} key={index}>
                   <ListItemAvatar>
-                  <img src={`/${item.imagePath}`} width="200" height="200"></img>
+                  <img src={`/${item.imagePath}`} width="200" height="200" style={{objectFit: "cover"}}></img>
                   </ListItemAvatar>
                   <div className={classes.text} />
                   <div className={classes.text}>
@@ -150,7 +150,7 @@ const OrderHistory = () => {
                         }).map((to) => (
                           <div key={ind}>
                             <ListItemText 
-                            secondary={to.name + "：" + to.price + "円"}></ListItemText>
+                            secondary={to.name + "単価" + " " +"：" + to.price + "円"}></ListItemText>
                           </div>
                         ))}
                       </div>
@@ -181,7 +181,7 @@ const OrderHistory = () => {
                 }).map((item) => (
                   <ListItem className={classes.list} key={index}>
                   <ListItemAvatar>
-                  <img src={`/${item.imagePath}`} width="200" height="200"></img>
+                  <img src={`/${item.imagePath}`} width="200" height="200" style={{objectFit: "cover"}}></img>
                   </ListItemAvatar>
                   <div className={classes.text} />
                   <div className={classes.text}>
@@ -195,7 +195,7 @@ const OrderHistory = () => {
                         }).map((to) => (
                           <div key={ind}>
                             <ListItemText 
-                            secondary={to.name + "：" + to.price + "円"}></ListItemText>
+                            secondary={to.name + "単価" + ' ' +"：" + to.price + "円"}></ListItemText>
                           </div>
                         ))}
                       </div>
@@ -215,7 +215,7 @@ const OrderHistory = () => {
           ))}
         </section>
   ):(
-    <p>注文履歴がありません</p>
+    <p align="center">注文履歴がありません</p>
   )}
     </React.Fragment>
   )
