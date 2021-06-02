@@ -39,7 +39,7 @@ const Order = () => {
   }else if(email.match(/^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/)){
     emailError = ''
   }else{
-    emailError = <p>メールアドレスの形式が不正です</p>
+    emailError = <>メールアドレスの形式が不正です</>
   }
   // 郵便番号入力、郵便番号エラー
   const [zipcode, setZipcode] = useState("")
@@ -115,8 +115,6 @@ const Order = () => {
   }
   const specifyDate =  Number(String(inputYear) + String(inputMonth)  + String(inputDate))
   const specifyTime = inputYear + "-" + inputMonth + "-" + inputDate + "-"  + inputHour + ":" + "00"
-  console.log(specifyDate)
-  console.log(orderDate)
   if(inputHour === ''){
     timeError = <>配達希望日時を入力</>
   }else if(orderDate - specifyDate > 0){
@@ -257,7 +255,7 @@ const Order = () => {
       <Box mt={1}>
         <TextField id="address" label="住所" style = {{width: 400}} onChange={(e) => {
             setAddress(e.target.value);
-          }} value={address} helperText={addressError} color="secondary" name="addr11" size="60"/>
+          }} value={address} helperText={addressError} color="secondary" name="addr11" />
       </Box>
       <Box mt={1}>
         <TextField id="tel" label="電話番号" style = {{width: 400}} helperText={telError} value={tel} onChange={changeTel}/>
@@ -376,7 +374,7 @@ const Order = () => {
       <div>
         {finalErrorMsg}
       </div>
-      <Button variant="contained" style = {{width: 300}} onClick={() => {orderBtn()}} color="secondary">この内容で注文する</Button>
+      <Button variant="contained" style = {{width: 300, color: "#fff", backgroundColor: "#CF000D"}} onClick={() => {orderBtn()}} color="secondary">この内容で注文する</Button>
     </Box>
 </Box>
 )

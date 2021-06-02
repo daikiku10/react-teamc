@@ -31,7 +31,7 @@ const Header = () => {
     const google_auth_provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithRedirect(google_auth_provider);
     dispatch(cartReset());
-    handleLink("/cart-item");
+    handleLink("/");
   };
   const logout = () => {
     firebase.auth().signOut();

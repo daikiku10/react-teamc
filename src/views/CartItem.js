@@ -41,7 +41,6 @@ const CartItem = () => {
   const items = useSelector(itemsSelector)
   const toppings = useSelector(toppingsSelector)
   const cart = useSelector(cartSelector)
-  console.log(cart)
   const orders = useSelector(ordersSelector)
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -70,7 +69,12 @@ const CartItem = () => {
       dispatch(userInfoSet(user))
     }
   },[user])
-
+  
+  const deleteCartBtn = (index) => {
+    let copyCart = cart
+    copyCart.itemInfo.splice(index,1)
+    dispatch(deleteCart(user,copyCart))
+  }
   // 商品合計金額
   useEffect(() => {
     let price = 0
@@ -83,7 +87,7 @@ const CartItem = () => {
       ))
     }
     setPrice(price)
-  },[cart])
+  },[cart,deleteCartBtn])
   // トッピング合計金額
   useEffect(() => {
     let toppingPr = 0
@@ -92,13 +96,13 @@ const CartItem = () => {
         data.toppings.map(topping => (
           toppings.filter(top => {return topping.id === top.id
           }).map(to => (
-            toppingPr += to.price
+            toppingPr += to.price * data.buyNum
           ))
         ))
       ))
     }
     setToppingPrice(toppingPr)
-  },[cart])
+  },[cart,deleteCartBtn])
   
   const history = useHistory()
   const handleLink = path => history.push(path)
@@ -117,16 +121,11 @@ const CartItem = () => {
     }
   }
 
-  const deleteCartBtn = (index) => {
-    let copyCart = cart
-    copyCart.itemInfo.splice(index,1)
-    dispatch(deleteCart(user,copyCart))
-  }
 
   return (
     <>
       <Container maxWidth="md">
-        <Typography variant="h6" color="inherit" noWrap>
+        <Typography variant="h4" color="inherit" noWrap>
           ショッピングカート
         </Typography>
         <TableContainer component={Paper}>
@@ -144,11 +143,11 @@ const CartItem = () => {
               {cart !== "" ? (
                 <TableBody>
                 {cart.itemInfo.map((data, index) => (
-                      <StyledTableRow key={data.id}>
+                      <StyledTableRow key={index}>
                         {items.filter((item) => {
                           return data.itemId === item.id
                         }).map((item) => (
-                          <React.Fragment key={data.orderId}>
+                          <React.Fragment key={index}>
                             <StyledTableCell component="th" scope="row">
                               <Typography><img src={item.imagePath} width="200" height="200"></img></Typography>
                               <Typography align="center">{item.name}</Typography>
@@ -157,20 +156,31 @@ const CartItem = () => {
                               { data.size === "M" ? <Typography>{item.priceM}円、{data.buyNum}杯</Typography> : <Typography>{item.priceL}円、{data.buyNum}杯</Typography> }
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              {data.toppings.map((topping) => (
-                                <List key={index}>
+                              {data.toppings.map((topping, ind) => (
+                                <List key={ind}>
                                   {toppings.filter((top) => {
                                     return topping.id === top.id
                                   }).map((to) => (
-                                      <ListItemText key={to.id}>{to.name} : {to.price}円</ListItemText>
+                                      <ListItemText key={ind}>{to.name} : {to.price}円、{data.buyNum}個</ListItemText>
                                   ))}
                                 </List>
                               ))}
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              {data.size==="M"? (item.priceM * data.buyNum ) : item.priceL * data.buyNum}
+                              <Typography>【ﾗｰﾒﾝ】</Typography>
+                              <Typography>{data.size==="M"? (item.priceM * data.buyNum ) : item.priceL * data.buyNum}円</Typography>
+                              <Typography>【ﾄｯﾋﾟﾝｸﾞ】</Typography>
+                              {data.toppings.map((topping, ind) => (
+                                <React.Fragment key={ind}>
+                                  {toppings.filter((top) => {
+                                    return topping.id === top.id
+                                  }).map((to) => (
+                                    <Typography key={ind}>{to.price * data.buyNum}円</Typography>
+                                  ))}
+                                </React.Fragment>
+                              ))}
                             </StyledTableCell>
-                            <StyledTableCell align="center"><Button onClick={() => deleteCartBtn(index)}>削除</Button></StyledTableCell>
+                            <StyledTableCell align="center"><Button onClick={() => deleteCartBtn(index)} style={{ color: "#fff", backgroundColor: "#CF000D"}}>削除</Button></StyledTableCell>
                           </React.Fragment>
                         ))
                       }
@@ -179,17 +189,21 @@ const CartItem = () => {
                       ))} 
                 </TableBody>
                 ) : (
-                    <Typography>カート商品がありません！</Typography>
+                 <TableBody>
+                   <StyledTableRow>
+                    <StyledTableCell>カート商品がありません！</StyledTableCell>
+                   </StyledTableRow>
+                 </TableBody>
                 )
               }  
-            
           </Table>
+            
           {cart !== "" ? 
           <>
             {cart.itemInfo.length == 0 ? <Typography>カート商品がありません！</Typography> :
             <>
-              <Typography>消費税：{Math.floor((price + toppingPrice) * 0.1 / 1.1)}円</Typography>
-              <Typography>合計金額：{price + toppingPrice}円</Typography>
+              <Typography variant="h5" align="center">消費税：{Math.floor((price + toppingPrice) * 0.1 / 1.1)}円</Typography>
+              <Typography variant="h5" align="center">合計金額：{price + toppingPrice}円</Typography>
             </>
             }
           </>:<></>
@@ -200,16 +214,16 @@ const CartItem = () => {
         {cart ?
         <>
           {cart.itemInfo.length===0? 
-            <Button variant="contained" style = {{width: 300}} color="secondary" onClick={() => {handleLink("/")}}>商品一覧に戻る</Button>
+            <Button variant="contained" style = {{width: 300, color: "#fff", backgroundColor: "#CF000D"}} color="secondary" onClick={() => {handleLink("/")}}>商品一覧に戻る</Button>
             :
             <>
-            <Button variant="contained" style = {{width: 300}} color="secondary" onClick={() => {showOrderComponent()}}>{show? "閉じる" : "注文に進む"}</Button>
+            <Button variant="contained" style = {{width: 300, color: "#fff", backgroundColor: "#CF000D"}} color="secondary" onClick={() => {showOrderComponent()}}>{show? "閉じる" : "注文に進む"}</Button>
             {show? <Order/> : <></>}
             </>
           }
         </>
         : 
-          <Button variant="contained" style = {{width: 300}} color="secondary" onClick={() => {handleLink("/")}}>商品一覧に戻る</Button>
+          <Button variant="contained" style = {{width: 300, color: "#fff", backgroundColor: "#CF000D"}} color="secondary" onClick={() => {handleLink("/")}}>商品一覧に戻る</Button>
         }
         </Box>
     </>
