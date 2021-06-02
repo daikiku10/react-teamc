@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
+import Box from '@material-ui/core/Box';
 import { setItem, deleteItem, setTopping, deleteTopping, newCart, addCart, cartSet } from '../actions/index';
 import { CART_STATUS_IN } from '../actions/status';
 
@@ -37,7 +38,6 @@ const ItemDetail = () => {
         dispatch(deleteTopping());
       };
   }, []);
-
   const user = useSelector(userSelector);
   const items = useSelector(itemsSelector);
   const allToppings = useSelector(toppingsSelector);
@@ -135,9 +135,9 @@ const ItemDetail = () => {
     <React.Fragment>
       <div className={classes.grid}>
         <Grid container justify='center'>
-              <Grid item xs={4} sm={5} >
-                <div text-align='center'><img src={`/${item.imagePath}`} alt='画像' style={{ width: 400, height: 300 }}></img></div>
-              </Grid>
+              <Box item xs={4} sm={5} textAlign="center">
+                <img src={`/${item.imagePath}`} alt='画像'  style={{ width: 400, height: 300 }} ></img>
+              </Box>
         <Grid item xs={4} sm={5}>
           <span style={{ fontsize:'20px' }} justify='center'>商品詳細</span>
             <h3>{item.name}</h3> <br />
@@ -155,7 +155,8 @@ const ItemDetail = () => {
                 <input type='radio' value='L' checked={size === 'L'} onChange={(e) =>  {handleChangeSize(e)}}/>
                 <span className='price'>  Ｌ </span>{Number(item.priceL).toLocaleString()}円(税込み)
               </label><p />
-            
+          </div>
+          <div className={classes.form}>
             <label htmlFor='topping'>
               <p><span style={{ fontWeight: 'bold' }}>トッピング：</span>
               <span style={{ color: 'red', fontWeight: 'bold' }}> ※1ヶにつき200円、多めは300円（税込み）</span></p>
@@ -164,7 +165,8 @@ const ItemDetail = () => {
                   <label key={topping.id}><input type='checkbox' name='topping' value={topping.id} onChange={(e) => handleChangeTopping(e)}/>{topping.name}   </label>
               ))}
             <br /><br/>
-            
+          </div>
+          <div className={classes.form}>
             <span style={{ fontWeight: 'bold' }}>数量：</span>
             <span style={{ color: 'red', fontWeight: 'bold' }}>数量を選択してください</span><br/>
             <TextField
@@ -174,12 +176,14 @@ const ItemDetail = () => {
               InputProps={{ inputProps: { min: 1, max: 10 } }}
               onChange={(e) => { handleChangebuyNum(e) }}
             /><p />
+          </div>
+          <Box textAlign="center" className={classes.form}>
             <h2>ご注文金額合計：{addPrice.toLocaleString()}　円(税込み)</h2>
 
             <Button onClick={addCartBtn} variant='contained' style={{ color: "#fff", backgroundColor: "#CF000D" }}>
             カートに入れる
             </Button>
-          </div>
+          </Box>
         </Grid>
       </div>
     </React.Fragment>
