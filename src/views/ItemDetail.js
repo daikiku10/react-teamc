@@ -102,7 +102,7 @@ const ItemDetail = () => {
     if(cart === ""){
       dispatch(newCart(user, item))
       handleLink('/cart-item')
-    }else {
+    }else{
       const copyCart = cart
       let info = [...copyCart.itemInfo, item.itemInfo[0]]
       let data = {
@@ -123,7 +123,7 @@ const ItemDetail = () => {
   let TopNum2 = 0
   let evenTop = toppings.filter(top => top.id % 2 === 0 )
   TopNum2 = evenTop.length;
-  //合計金額  
+  //合計金額
   let addPrice = item.priceM
   if (size === 'M') {
       addPrice = item.priceM * buyNum2 + ((200 * (TopNum1 * buyNum2)) + ((300 * TopNum2 * buyNum2)))
