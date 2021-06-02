@@ -83,12 +83,12 @@ const OrderHistory = () => {
             <List className={classes.orderList} key={order.orderId}>
               <div className="module-spacer--small" />
             <div>注文日時：{order.orderDate}</div>
-            {order.itemInfo.map((data) => (
-              <List key={order.orderId}>
+            {order.itemInfo.map((data, index) => (
+              <List key={index}>
                 {items.filter((item) => {
                   return data.itemId === item.id
                 }).map((item) => (
-                  <ListItem className={classes.list} key={order.orderId}>
+                  <ListItem className={classes.list} key={index}>
                     <ListItemAvatar>
                       <img src={`/${item.imagePath}`} width="200" height="200"></img>
                     </ListItemAvatar>
@@ -97,12 +97,12 @@ const OrderHistory = () => {
                     <ListItemText primary={item.name} />
                     { data.size === "M" ? <ListItemText secondary={"サイズ：M　単価：" + item.priceM + "円"}/> : <ListItemText secondary={"サイズ：L　単価：" + item.priceL + "円"}/>}
                     <ListItemText secondary={"数量：" + data.buyNum + "杯"}/>
-                      {data.toppings.map((topping) => (
-                        <div key={order.orderId}>
+                      {data.toppings.map((topping, ind) => (
+                        <div key={ind}>
                           {toppings.filter((top) => {
                             return topping.id === top.id
                             }).map((to) => (
-                              <div key={order.orderId}>
+                              <div key={ind}>
                                 <ListItemText 
                                   secondary={to.name + "：" + to.price + "円"}></ListItemText>
                               </div>
@@ -125,16 +125,16 @@ const OrderHistory = () => {
           ))}
           {orders.filter((order) => {
             return order.status === CART_STATUS_PAID
-          }).map((order, index) => (
+          }).map((order) => (
             <List className={classes.orderList} key={order.orderId}>
               <div className="module-spacer--small" />
             <div>注文日時：{order.orderDate}</div>
-            {order.itemInfo.map((data) => (
-              <List key={order.orderId}>
+            {order.itemInfo.map((data, index) => (
+              <List key={index}>
                 {items.filter((item) => {
                   return data.itemId === item.id
                 }).map((item) => (
-                  <ListItem className={classes.list} key={order.orderId}>
+                  <ListItem className={classes.list} key={index}>
                   <ListItemAvatar>
                   <img src={`/${item.imagePath}`} width="200" height="200"></img>
                   </ListItemAvatar>
@@ -143,12 +143,12 @@ const OrderHistory = () => {
                   <ListItemText primary={item.name} />
                     { data.size === "M" ? <ListItemText secondary={"サイズ：M　単価：" + item.priceM + "円"}/> : <ListItemText secondary={"サイズ：L　単価：" + item.priceL + "円"}/>}
                     <ListItemText secondary={"数量：" + data.buyNum + "杯"}/>
-                    {data.toppings.map((topping) => (
-                      <div key={order.orderId}>
+                    {data.toppings.map((topping, ind) => (
+                      <div key={ind}>
                         {toppings.filter((top) => {
                           return topping.id === top.id
                         }).map((to) => (
-                          <div key={order.orderId}>
+                          <div key={ind}>
                             <ListItemText 
                             secondary={to.name + "：" + to.price + "円"}></ListItemText>
                           </div>
@@ -174,12 +174,12 @@ const OrderHistory = () => {
             <List className={classes.orderList} key={order.orderId}>
               <div className="module-spacer--small" />
             <div>注文日時：{order.orderDate}</div>
-            {order.itemInfo.map((data) => (
-              <List key={order.orderId}>
+            {order.itemInfo.map((data, index) => (
+              <List key={index}>
                 {items.filter((item) => {
                   return data.itemId === item.id
                 }).map((item) => (
-                  <ListItem className={classes.list} key={order.orderId}>
+                  <ListItem className={classes.list} key={index}>
                   <ListItemAvatar>
                   <img src={`/${item.imagePath}`} width="200" height="200"></img>
                   </ListItemAvatar>
@@ -188,12 +188,12 @@ const OrderHistory = () => {
                   <ListItemText primary={item.name} />
                     { data.size === "M" ? <ListItemText secondary={"サイズ：M　単価：" + item.priceM + "円"}/> : <ListItemText secondary={"サイズ：L　単価：" + item.priceL + "円"}/>}
                     <ListItemText secondary={"数量：" + data.buyNum + "杯"}/>
-                    {data.toppings.map((topping) => (
-                      <div key={order.orderId}>
+                    {data.toppings.map((topping, ind) => (
+                      <div key={ind}>
                         {toppings.filter((top) => {
                           return topping.id === top.id
                         }).map((to) => (
-                          <div key={order.orderId}>
+                          <div key={ind}>
                             <ListItemText 
                             secondary={to.name + "：" + to.price + "円"}></ListItemText>
                           </div>

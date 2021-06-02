@@ -12,12 +12,20 @@ import { BrowserRouter as Router, Switch, Route,Link } from 'react-router-dom';
 import { useSelector} from "react-redux";
 import {Box} from '@material-ui/core';
 
+const backHome = () => {
+  setTimeout(function(){
+    window.location.href = '/';
+  }, 5000);
+}
+
 const Undefine = () => {
   return <div>
     <Box textAlign="center" mt={20}>
     <h1>Not Found</h1>
     <h2>お探しのページが見つかりませんでした。<br></br>URLをご確認の上、再度お試しいただくか、<br></br>上のナビゲーションより既存ページへアクセスしてください。</h2>
+    <h3>※５秒後に自動でトップページに戻ります</h3>
     <Link to="/">トップページに戻る</Link>
+    {backHome()}
     </Box>
   </div>
 }

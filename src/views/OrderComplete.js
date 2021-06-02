@@ -10,6 +10,11 @@ import {Container, Button, ListItem,} from '@material-ui/core';
 // import Divider from "@material-ui/core/Divider";
 // import ListItemText from '@material-ui/core/ListItemText';
 // import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+const backHome = () => {
+  setTimeout(function(){
+    window.location.href = '/';
+  }, 5000);
+}
 
 const OrderComplete = () => {
   // const classes = useStyles()
@@ -18,11 +23,13 @@ const OrderComplete = () => {
   
   return(
       <Router>
-        <Container maxWidth="sm" textAlign="center">
+        <Container maxWidth="sm" align="center">
       <h2>決済が完了しました！</h2>
       <p>この度はご注文ありがとうございます。</p>
-      <p>お支払い先は、お送りしたメールに記載してありますのでご確認ください。</p>
+      <p>ご入力いただいたメールアドレス宛に注文完了メールを送信しました。</p>
       <p>メールが届かない場合は「注文履歴」からご確認ください。</p>
+      {backHome()}
+      <p>※５秒後に自動でトップページに遷移します</p>
       <Button variant="outlined" style={{ color: "#fff", backgroundColor: "#CF000D"}} onClick={() => handleLink('/')}>
       トップ画面に戻る
       </Button>
