@@ -12,19 +12,19 @@ export default (state = initialState, action) => {
       return {
         cart: action.cartData,
         orders:[],
-        userInfo:""
+        userInfo:state.userInfo
       }
     case NEWCART:
       return {
         cart: action.cartData,
         orders:[],
-        userInfo:""
+        userInfo:state.userInfo
       }
     case ADDCART:
       return {
         cart: action.cartData,
         orders:[],
-        userInfo:""
+        userInfo:state.userInfo
       }
     case CARTRESET:
       return {
@@ -43,26 +43,26 @@ export default (state = initialState, action) => {
         return {
           cart:state.cart,
           orders:[...action.orderData],
-          userInfo:state.userInfo
+          userInfo:""
         }
       }else {
         return {
           cart:state.cart,
           orders:[...state.orders, action.orderData],
-          userInfo:state.userInfo
+          userInfo:""
         }
       }
     case ORDERRESET:
       return {
         cart:state.cart,
         orders:[],
-        userInfo: state.userInfo
+        userInfo: ""
       }
     case ORDER:
       return {
         cart:"",
         orders:[],
-        userInfo:state.userInfo
+        userInfo:""
       }
     case NEWUSERINFO:
       return{
@@ -92,7 +92,7 @@ export default (state = initialState, action) => {
       return {
         cart:"",
         orders:[...state.orders],
-        userInfo:state.userInfo
+        userInfo:""
       }
     default:
       return state
