@@ -11,6 +11,7 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import TextField from "@material-ui/core/TextField";
+import SortIcon from "@material-ui/icons/Sort";
 
 const useStyles = makeStyles({
   root: {
@@ -84,7 +85,7 @@ const Home = () => {
     setKaramozi(false);
   };
 
-  const handleSortByAscend = (compareFunc) => {
+  const handleSortByAscend = () => {
     const ue = [...array];
     ue.sort((a, b) => {
       return a.priceM - b.priceM;
@@ -92,7 +93,7 @@ const Home = () => {
     setArray(ue);
   };
 
-  const handleSortByDescend = (compareFunc) => {
+  const handleSortByDescend = () => {
     const shita = [...array];
     shita.sort((a, b) => {
       return b.priceM - a.priceM;
@@ -102,6 +103,16 @@ const Home = () => {
 
   const sortReset = () => {
     setArray(items);
+  };
+  const bunki = (e) => {
+    const shori = e.target.value;
+    if (shori === "normal") {
+      sortReset();
+    } else if (shori === "low") {
+      handleSortByAscend();
+    } else if (shori === "high") {
+      handleSortByDescend();
+    }
   };
 
   return (
@@ -135,16 +146,19 @@ const Home = () => {
           クリア
           <DeleteIcon />
         </Button>
-
-        <select name="sort">
-          <option>標準</option>
-          <option onClick={handleSortByAscend}>値段が低い順</option>
-          <option onClick={handleSortByDescend}>値段が高い順</option>
+      </div>
+      <div style={{ float: "right", fontSize: "13px" }}>
+        <SortIcon style={{ fontSize: "13px" }} /> 並び替え：
+        <select
+          name="sort"
+          onChange={(e) => {
+            bunki(e);
+          }}
+        >
+          <option value="normal">標準</option>
+          <option value="low">値段が低い順</option>
+          <option value="high">値段が高い順</option>
         </select>
-
-        <button onClick={sortReset}>標準</button>
-        <button onClick={handleSortByAscend}>値段が低い順</button>
-        <button onClick={handleSortByDescend}>値段が高い順</button>
       </div>
       {resultState && (
         <h2 style={{ textAlign: "center" }}>一致する商品がありません</h2>
@@ -168,12 +182,14 @@ const Home = () => {
                 </CardMedia>
                 <CardContent>
                   <Link to={`/item-detail/${item.id}`} style={{ fontSize: 20 }}>
-                    {item.name}
+                    <div style={{ fontSize: 20, textAlign: "center" }}>
+                      {item.name}
+                    </div>
                   </Link>
-                  <p style={{ fontSize: 16 }}>
+                  <p style={{ fontSize: 16, textAlign: "center" }}>
                     Mサイズ {item.priceM.toLocaleString()}円(税込)
                   </p>
-                  <p style={{ fontSize: 16 }}>
+                  <p style={{ fontSize: 16, textAlign: "center" }}>
                     Lサイズ {item.priceL.toLocaleString()}円(税込)
                   </p>
                 </CardContent>
