@@ -132,7 +132,7 @@ const CartItem = () => {
           <Table className={classes.table} aria-label="customized table">
             <TableHead>
               <TableRow>
-                <StyledTableCell>商品名</StyledTableCell>
+                <StyledTableCell align="center">商品名</StyledTableCell>
                 <StyledTableCell align="center">サイズ、価格、数量</StyledTableCell>
                 <StyledTableCell align="center">トッピング価格</StyledTableCell>
                 <StyledTableCell align="center">小計</StyledTableCell>
@@ -149,8 +149,8 @@ const CartItem = () => {
                         }).map((item) => (
                           <React.Fragment key={index}>
                             <StyledTableCell component="th" scope="row">
-                              <Typography><img src={item.imagePath} width="200" height="200"></img></Typography>
-                              <Typography align="center">{item.name}</Typography>
+                              <Typography><img src={item.imagePath} width="200" height="200" style={{objectFit: "cover"}}></img></Typography>
+                              <Typography align="center"><p>{item.name}</p></Typography>
                             </StyledTableCell> 
                             <StyledTableCell align="center">
                               { data.size === "M" ? <Typography>{item.priceM}円、{data.buyNum}杯</Typography> : <Typography>{item.priceL}円、{data.buyNum}杯</Typography> }
