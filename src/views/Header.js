@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   menuButton: {
-   marginRight: theme.spacing(2),
+    marginRight: theme.spacing(2),
   },
   title: {
     flexGrow: 1,
@@ -31,7 +31,7 @@ const Header = () => {
     const google_auth_provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithRedirect(google_auth_provider);
     dispatch(cartReset());
-    handleLink("/cart-item");
+    handleLink("/");
   };
   const logout = () => {
     firebase.auth().signOut();
@@ -43,14 +43,21 @@ const Header = () => {
     <>
       <div className={classes.root}>
         <Router>
-          <AppBar position="static" style={{ color: "#fff", backgroundColor: "#CF000D"}}>
+          <AppBar
+            position="static"
+            style={{ color: "#fff", backgroundColor: "#CF000D" }}
+          >
             <Toolbar>
               <Typography
                 variant="h6"
                 className={classes.title}
                 onClick={() => handleLink("/")}
               >
-                ラクラクラーメン
+                <img
+                  // style={{ width: 345, height: 200 }}
+                  src={`${process.env.PUBLIC_URL}/header_logo.png`}
+                  alt="Logo"
+                />
               </Typography>
               <>{user ? <>{user.displayName}</> : <></>}</>
               <Route>
@@ -63,8 +70,11 @@ const Header = () => {
                 <>
                   {user ? (
                     <>
-                      <Button color="inherit" onClick={() => handleLink("/order-history")}>
-                      注文履歴
+                      <Button
+                        color="inherit"
+                        onClick={() => handleLink("/order-history")}
+                      >
+                        注文履歴
                       </Button>
                       <Button color="inherit" onClick={logout}>
                         ログアウト
