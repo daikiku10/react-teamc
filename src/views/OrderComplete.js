@@ -18,7 +18,7 @@ const OrderComplete = () => {
   
   return(
       <Router>
-        <Container maxWidth="sm" textAlign="center">
+        <Container maxWidth="sm" align="center">
       <h2>決済が完了しました！</h2>
       <p>この度はご注文ありがとうございます。</p>
       <p>お支払い先は、お送りしたメールに記載してありますのでご確認ください。</p>
